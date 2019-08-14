@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: "realm-android"
 
 android {
@@ -25,28 +26,28 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ["*.jar"], dir: "libs")
-    androidTestCompile("com.android.support.test.espresso:espresso-core:2.2.2", {
+    implementation fileTree(include: ["*.jar"], dir: "libs")
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:2.2.2", {
         exclude group: "com.android.support", module: "support-annotations"
     })
-    compile "io.realm:android-adapters:2.1.0"
-    compile "com.github.PhilJay:MPAndroidChart:v3.0.2"
-    compile "com.android.support:appcompat-v7:25.3.1"
-    compile "com.android.support:design:25.3.1"
-    compile "com.android.support:support-v4:25.3.1"
-    compile "com.android.support:recyclerview-v7:25.3.1"
-    compile "commons-io:commons-io:2.5"
-    compile "org.apache.commons:commons-math3:3.6.1"
-    compile "com.google.code.gson:gson:2.8.0"
-    testCompile "junit:junit:4.12"
-    debugCompile "com.facebook.stetho:stetho:1.5.0"
-    debugCompile "com.uphyca:stetho_realm:2.0.1"
-    compile "com.faendir:acra:4.9.3-SNAPSHOT"
-    compile "io.tidepool.api:tidepool-api-lib-debug@aar"
-    compile "com.android.volley:volley:1.0.0"
-    compile "com.jayway.awaitility:awaitility:1.7.0"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.15"
+    implementation "io.realm:android-adapters:2.1.0"
+    implementation "com.github.PhilJay:MPAndroidChart:v3.0.2"
+    implementation "com.android.support:appcompat-v7:25.3.1"
+    implementation "com.android.support:design:25.3.1"
+    implementation "com.android.support:support-v4:25.3.1"
+    implementation "com.android.support:recyclerview-v7:25.3.1"
+    implementation "commons-io:commons-io:2.5"
+    implementation "org.apache.commons:commons-math3:3.6.1"
+    implementation "com.google.code.gson:gson:2.8.0"
+    implementation "junit:junit:4.12"
+    debugImplementation "com.facebook.stetho:stetho:1.5.0"
+    debugImplementation "com.uphyca:stetho_realm:2.0.1"
+    implementation "com.faendir:acra:4.9.3-SNAPSHOT"
+    implementation "io.tidepool.api:tidepool-api-lib-debug@aar"
+    implementation "com.android.volley:volley:1.1.0"
+    implementation "com.jayway.awaitility:awaitility:1.7.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.2'
 }
 
 // include user specific build tasks

@@ -14,9 +14,12 @@ import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmResults
 import io.realm.Sort
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+//import kotlinx.coroutines.experimental.CommonPool
+//import kotlinx.coroutines.experimental.android.UI
+//import kotlinx.coroutines.experimental.async
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -53,11 +56,11 @@ object ExportTask {
         finishedCallbacks.forEach { it() }
     }
 
-    fun exportDataAsync(dataType: ExportFragment.DataTypes, outputFormat: ExportFragment.OutputFormats) = async(UI) {
+    fun exportDataAsync(dataType: ExportFragment.DataTypes, outputFormat: ExportFragment.OutputFormats) = GlobalScope.async ( Dispatchers.Main ) {
         try {
             isRunning = true
             isCancelled = false
-            val job = async(CommonPool) {
+            val job = GlobalScope.async (Dispatchers.Default) {
                 when (dataType) {
                     ExportFragment.DataTypes.RAW ->
                         Realm.getInstance(realmConfigRawData).use { realm ->
