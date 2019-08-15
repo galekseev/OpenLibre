@@ -56,12 +56,12 @@ class ExportFragment : DialogFragment() {
     private val dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
     private lateinit var dialogView: View
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        DataTypes.init(context)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        DataTypes.init(context!!)
         if (showsDialog) {
             return super.onCreateView(inflater, container, savedInstanceState)
         } else {
-            return inflater!!.inflate(R.layout.fragment_export, container, false)
+            return inflater.inflate(R.layout.fragment_export, container, false)
         }
     }
 
@@ -75,10 +75,10 @@ class ExportFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        dialogView = activity.layoutInflater.inflate(R.layout.fragment_export, null)
+        dialogView = activity!!.layoutInflater.inflate(R.layout.fragment_export, null)
 
-        spinner_data_type.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, DataTypes.values())
-        spinner_output_format.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, OutputFormats.values())
+        spinner_data_type.adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, DataTypes.values())
+        spinner_output_format.adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, OutputFormats.values())
 
         button_export_or_cancel.setOnClickListener {
             if (ExportTask.isRunning) {
@@ -96,7 +96,7 @@ class ExportFragment : DialogFragment() {
 
         ExportTask.registerCallbacks(this::finished, this::updateProgress)
 
-        return AlertDialog.Builder(activity)
+        return AlertDialog.Builder(activity!!)
                 .setTitle(R.string.export_data)
                 .setView(dialogView)
                 .create()
@@ -108,7 +108,7 @@ class ExportFragment : DialogFragment() {
     }
 
     fun updateProgress(progress: Double, currentDate: Date?) {
-        activity.runOnUiThread {
+        activity?.runOnUiThread {
             if (ExportTask.isRunning) {
                 button_export_or_cancel.text = getString(R.string.cancel)
                 pb_export.visibility = View.VISIBLE
@@ -128,7 +128,7 @@ class ExportFragment : DialogFragment() {
     }
 
     fun finished() {
-        activity.runOnUiThread {
+        activity?.runOnUiThread {
             button_export_or_cancel.text = getString(R.string.export)
             button_export_or_cancel.isEnabled = true
             pb_export.visibility = View.INVISIBLE

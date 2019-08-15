@@ -27,7 +27,7 @@ import io.realm.Sort;
 @ReportsCrashes(
         formUri = "http://www-stud.informatik.uni-frankfurt.de/~scholz/openlibre/report.php",
         reportType = HttpSender.Type.FORM,
-        reportingInteractionMode = ReportingInteractionMode.DIALOG,
+        mode = ReportingInteractionMode.DIALOG,
         resToastText = R.string.crash_toast_text,
         resDialogTitle = R.string.app_name,
         resDialogText = R.string.crash_dialog_text,
