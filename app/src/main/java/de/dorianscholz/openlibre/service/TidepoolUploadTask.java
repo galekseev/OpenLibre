@@ -112,10 +112,11 @@ class TidepoolUploadTask extends AsyncTask<Void, Void, Boolean> {
             tidepoolSynchronization.updateProgress(0, new Date(tidepoolUploadTimestamp));
 
             // find data that has not be uploaded yet
-            List<GlucoseData> newGlucoseData = realmProcessedData.where(GlucoseData.class).
-                    equalTo(GlucoseData.IS_TREND_DATA, false).
-                    greaterThan(GlucoseData.DATE, tidepoolUploadTimestamp).
-                    findAllSorted(GlucoseData.DATE, Sort.ASCENDING);
+            List<GlucoseData> newGlucoseData = realmProcessedData.where(GlucoseData.class)
+                    .equalTo(GlucoseData.IS_TREND_DATA, false)
+                    .greaterThan(GlucoseData.DATE, tidepoolUploadTimestamp)
+                    .sort(GlucoseData.DATE, Sort.ASCENDING)
+                    .findAll();
 
             int countAllNewGlucoseData = newGlucoseData.size();
 
@@ -203,10 +204,11 @@ class TidepoolUploadTask extends AsyncTask<Void, Void, Boolean> {
                 preferencesEditor.apply();
 
                 // find data that has not be uploaded yet
-                newGlucoseData = realmProcessedData.where(GlucoseData.class).
-                        equalTo(GlucoseData.IS_TREND_DATA, false).
-                        greaterThan(GlucoseData.DATE, tidepoolUploadTimestamp).
-                        findAllSorted(GlucoseData.DATE, Sort.ASCENDING);
+                newGlucoseData = realmProcessedData.where(GlucoseData.class)
+                        .equalTo(GlucoseData.IS_TREND_DATA, false)
+                        .greaterThan(GlucoseData.DATE, tidepoolUploadTimestamp)
+                        .sort(GlucoseData.DATE, Sort.ASCENDING)
+                        .findAll();
 
                 float progress = (countAllNewGlucoseData - newGlucoseData.size()) / (float) countAllNewGlucoseData;
                 Log.d(TidepoolUploadTask.LOG_ID, "Uploaded until: " + new Date(tidepoolUploadTimestamp) + ", progress: " + progress);

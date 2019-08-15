@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
 
         } else if (id == R.id.action_show_last_scan) {
             RealmResults<ReadingData> readingDataResults = mRealmProcessedData.where(ReadingData.class).
-                    findAllSorted(ReadingData.DATE, Sort.DESCENDING);
+                    sort(ReadingData.DATE, Sort.DESCENDING).findAll();
             if (readingDataResults.size() == 0) {
                 Toast.makeText(this, "No scan data available!", Toast.LENGTH_LONG).show();
             } else {
@@ -204,9 +204,10 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
             return true;
 
         } else if (id == R.id.action_show_full_history) {
-            List<GlucoseData> history = mRealmProcessedData.where(GlucoseData.class).
-                    equalTo(GlucoseData.IS_TREND_DATA, false).
-                    findAllSorted(GlucoseData.DATE, Sort.ASCENDING);
+            List<GlucoseData> history = mRealmProcessedData.where(GlucoseData.class)
+                    .equalTo(GlucoseData.IS_TREND_DATA, false)
+                    .sort(GlucoseData.DATE, Sort.ASCENDING)
+                    .findAll();
             ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
                     .clearScanData();
             ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
@@ -255,7 +256,8 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
             List<ReadingData> readingDataList = mRealmProcessedData
                     .where(ReadingData.class)
                     .isNotEmpty(ReadingData.HISTORY)
-                    .findAllSorted(ReadingData.DATE, Sort.ASCENDING);
+                    .sort(ReadingData.DATE, Sort.ASCENDING)
+                    .findAll();
             // plot only the last 100 readings
             ArrayList<ReadingData> readingDataLimtedList = new ArrayList<>();
             for (int i = readingDataList.size(); i > Math.max(readingDataList.size() - 100, 0) ; i--) {
@@ -366,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
             // reparse raw data into new Realm
             mRealmProcessedData.beginTransaction();
             for (RawTagData rawTagData : mRealmRawData.where(RawTagData.class)
-                    .findAllSorted(RawTagData.DATE, Sort.ASCENDING)) {
+                    .sort(RawTagData.DATE, Sort.ASCENDING).findAll()) {
                 mRealmProcessedData.copyToRealmOrUpdate(new ReadingData(rawTagData));
             }
             mRealmProcessedData.commitTransaction();

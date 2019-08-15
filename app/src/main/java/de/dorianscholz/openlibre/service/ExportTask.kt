@@ -65,23 +65,32 @@ object ExportTask {
                     ExportFragment.DataTypes.RAW ->
                         Realm.getInstance(realmConfigRawData).use { realm ->
                             exportEntries<RawTagData>("raw-data", outputFormat, realm,
-                                    realm.where(RawTagData::class.java)
-                                            .findAllSorted(RawTagData.DATE, Sort.ASCENDING))
+                                realm
+                                    .where(RawTagData::class.java)
+                                    .sort(RawTagData.DATE, Sort.ASCENDING)
+                                    .findAll()
+                            )
                         }
 
                     ExportFragment.DataTypes.READING ->
                         Realm.getInstance(realmConfigProcessedData).use { realm ->
                             exportEntries<ReadingData>("decoded-data", outputFormat, realm,
-                                    realm.where(ReadingData::class.java)
-                                            .findAllSorted(ReadingData.DATE, Sort.ASCENDING))
+                                realm
+                                    .where(ReadingData::class.java)
+                                    .sort(ReadingData.DATE, Sort.ASCENDING)
+                                    .findAll()
+                            )
                         }
 
                     ExportFragment.DataTypes.GLUCOSE ->
                         Realm.getInstance(realmConfigProcessedData).use { realm ->
                             exportEntries<GlucoseData>("glucose-data", outputFormat, realm,
-                                    realm.where(GlucoseData::class.java)
-                                            .equalTo(GlucoseData.IS_TREND_DATA, false)
-                                            .findAllSorted(GlucoseData.DATE, Sort.ASCENDING))
+                                realm
+                                    .where(GlucoseData::class.java)
+                                    .equalTo(GlucoseData.IS_TREND_DATA, false)
+                                    .sort(GlucoseData.DATE, Sort.ASCENDING)
+                                    .findAll()
+                            )
                         }
                 }
             }

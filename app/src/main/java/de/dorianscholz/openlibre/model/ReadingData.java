@@ -70,7 +70,8 @@ public class ReadingData extends RealmObject {
         RealmResults<ReadingData> readings = realmProcessedData.where(ReadingData.class)
                 .contains(ReadingData.ID, rawTagData.getTagId())
                 .lessThan(ReadingData.DATE, date)
-                .findAllSorted(ReadingData.DATE, Sort.DESCENDING);
+                .sort(ReadingData.DATE, Sort.DESCENDING)
+                .findAll();
         if (readings.size() > 0) {
             lastSensorAgeInMinutes = readings.first().getSensorAgeInMinutes();
             lastReadingDate = readings.first().getDate();
@@ -185,7 +186,8 @@ public class ReadingData extends RealmObject {
                 .equalTo(GlucoseData.IS_TREND_DATA, false)
                 .greaterThanOrEqualTo(GlucoseData.AGE_IN_SENSOR_MINUTES, ageInSensorMinutesList.get(0))
                 .lessThanOrEqualTo(GlucoseData.AGE_IN_SENSOR_MINUTES, ageInSensorMinutesList.get(ageInSensorMinutesList.size() - 1))
-                .findAllSorted(GlucoseData.AGE_IN_SENSOR_MINUTES, Sort.ASCENDING);
+                .sort(GlucoseData.AGE_IN_SENSOR_MINUTES, Sort.ASCENDING)
+                .findAll();
 
         // if there are enough previous and new data points, try to fit them together
         // this is needed as the exact time when a new history value is generated is not known

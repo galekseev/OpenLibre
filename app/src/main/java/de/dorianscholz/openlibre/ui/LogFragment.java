@@ -71,7 +71,8 @@ public class LogFragment extends Fragment {
                     mRealmProcessedData
                             .where(ReadingData.class)
                             .isNotEmpty(ReadingData.TREND)
-                            .findAllSortedAsync(ReadingData.DATE, Sort.DESCENDING)
+                            .sort(ReadingData.DATE, Sort.DESCENDING)
+                            .findAllAsync()
             ));
             recyclerView.setHasFixedSize(true);
             recyclerView.addItemDecoration(

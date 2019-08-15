@@ -41,7 +41,7 @@ public class SensorStatusFragment extends DialogFragment {
     public void setupUi(View view) {
         Realm realmProcessedData = Realm.getInstance(realmConfigProcessedData);
         RealmResults<SensorData> sensorDataResults = realmProcessedData.where(SensorData.class).
-                findAllSorted(START_DATE, Sort.DESCENDING);
+                sort(START_DATE, Sort.DESCENDING).findAll();
 
         TextView sensorId = (TextView) view.findViewById(R.id.tv_sensor_id_value);
         TextView sensorStartDate = (TextView) view.findViewById(R.id.tv_sensor_start_date_value);
