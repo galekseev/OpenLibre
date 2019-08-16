@@ -5,7 +5,6 @@ buildscript {
     repositories {
         jcenter()
         google()
- //       mavenCentral()
     }
 
     dependencies {
@@ -20,14 +19,12 @@ buildscript {
 
 allprojects {
     repositories {
-        //maven { url "https://github.com/uPhyca/stetho-realm/raw/master/maven-repo" }
         maven { url "https://github.com/linchaolong/stetho-realm/raw/master/maven-repo" }
         maven { url "https://jitpack.io" }
         maven { url "https://oss.jfrog.org/libs-snapshot/" }
         flatDir { dirs "../../TidepoolAPILib/tidepool-api-lib/build/outputs/aar" }
         jcenter()
         google()
-        //mavenCentral()
     }
 }
 

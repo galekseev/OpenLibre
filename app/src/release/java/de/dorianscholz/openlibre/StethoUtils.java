@@ -1,4 +1,4 @@
-package de.dorianscholz.openlibre;
+package de.camomile.openlibre;
 
 import android.app.Application;
 

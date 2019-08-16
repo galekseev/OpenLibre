@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
     defaultConfig {
-        applicationId "de.dorianscholz.openlibre"
+        applicationId "com.camomile.openlibre"
         minSdkVersion 16
         targetSdkVersion 28
         multiDexEnabled true

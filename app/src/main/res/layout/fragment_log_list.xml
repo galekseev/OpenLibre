@@ -4,11 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/log_list_recycle_view"
-    android:name="de.dorianscholz.openlibre.LogFragment"
+    android:name="com.camomile.openlibre.LogFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="de.dorianscholz.openlibre.ui.LogFragment"
+    tools:context="com.camomile.openlibre.ui.LogFragment"
     tools:listitem="@layout/fragment_log_row" />
