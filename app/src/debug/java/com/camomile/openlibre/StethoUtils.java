@@ -17,6 +17,13 @@ class StethoUtils {
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(application))
                         .enableWebKitInspector(RealmInspectorModulesProvider
                                 .builder(application)
+                                /* Viewing realm in Stetho needs Stetho to have the same
+                                 * deleteIfMigrationNeeded configuration as realm
+                                 * ProcessedData realm = true
+                                 * RawData realm  = false
+                                 * UserData realm = false
+                                */
+                                .withDeleteIfMigrationNeeded(false)
                                 .withFolder(dataPath)
                                 .withMetaTables()
                                 .withLimit(1000000)

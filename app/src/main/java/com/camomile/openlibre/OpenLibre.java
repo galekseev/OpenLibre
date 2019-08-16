@@ -13,10 +13,10 @@ import com.camomile.openlibre.model.RawTagData;
 import com.camomile.openlibre.model.ReadingData;
 import com.camomile.openlibre.model.UserDataModule;
 
-import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-import org.acra.sender.HttpSender;
+//import org.acra.ACRA;
+//import org.acra.ReportingInteractionMode;
+//import org.acra.annotation.ReportsCrashes;
+//import org.acra.sender.HttpSender;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,16 +27,16 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.Sort;
 
-@ReportsCrashes(
-        formUri = "http://www-stud.informatik.uni-frankfurt.de/~scholz/openlibre/report.php",
-        reportType = HttpSender.Type.FORM,
-        mode = ReportingInteractionMode.DIALOG,
-        resToastText = R.string.crash_toast_text,
-        resDialogTitle = R.string.app_name,
-        resDialogText = R.string.crash_dialog_text,
-        resDialogCommentPrompt = R.string.crash_dialog_comment_prompt,
-        resDialogOkToast = R.string.crash_dialog_ok_toast
-)
+//@ReportsCrashes(
+//        formUri = "http://www-stud.informatik.uni-frankfurt.de/~scholz/openlibre/report.php",
+//        reportType = HttpSender.Type.FORM,
+//        mode = ReportingInteractionMode.DIALOG,
+//        resToastText = R.string.crash_toast_text,
+//        resDialogTitle = R.string.app_name,
+//        resDialogText = R.string.crash_dialog_text,
+//        resDialogCommentPrompt = R.string.crash_dialog_comment_prompt,
+//        resDialogOkToast = R.string.crash_dialog_ok_toast
+//)
 public class OpenLibre extends Application {
 
     private static final String LOG_ID = "OpenLibre::" + OpenLibre.class.getSimpleName();
@@ -53,22 +53,22 @@ public class OpenLibre extends Application {
     public static File openLibreDataPath;
 
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-
-        // The following line triggers the initialization of ACRA
-        ACRA.init(this);
-    }
+//    @Override
+//    protected void attachBaseContext(Context base) {
+//        super.attachBaseContext(base);
+//
+//        // The following line triggers the initialization of ACRA
+//        ACRA.init(this);
+//    }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        // if it is the onCreate for ARCA, skip own init tasks
-        if (ACRA.isACRASenderServiceProcess()) {
-            return;
-        }
+//        // if it is the onCreate for ARCA, skip own init tasks
+//        if (ACRA.isACRASenderServiceProcess()) {
+//            return;
+//        }
 
         refreshApplicationSettings(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
 
