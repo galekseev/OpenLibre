@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
     public void onNfcReadingFinished(ReadingData readingData) {
         mLastScanTime = new Date().getTime();
         onShowScanData(readingData);
-        TidepoolSynchronization.getInstance().startTriggeredSynchronization(getApplicationContext());
+//        TidepoolSynchronization.getInstance().startTriggeredSynchronization(getApplicationContext());
     }
 
 
