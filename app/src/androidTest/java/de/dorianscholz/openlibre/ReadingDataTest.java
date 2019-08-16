@@ -64,11 +64,11 @@ public class ReadingDataTest {
         realmProcessedData = Realm.getInstance(realmConfigProcessedData);
 
         // get all raw data
-        RealmResults<RawTagData> rawTags = realmRawData.where(RawTagData.class).findAllSorted(RawTagData.DATE, Sort.ASCENDING);
+        RealmResults<RawTagData> rawTags = realmRawData.where(RawTagData.class).sort(RawTagData.DATE, Sort.ASCENDING).findAll();
 
         // reduce data set to just the raw data of the most recent sensor
         String tagId = rawTags.last().getTagId();
-        rawTags = rawTags.where().equalTo(RawTagData.TAG_ID, tagId).findAllSorted(RawTagData.DATE, Sort.ASCENDING);
+        rawTags = rawTags.where().equalTo(RawTagData.TAG_ID, tagId).sort(RawTagData.DATE, Sort.ASCENDING).findAll();
 
         // reduce data set further to only MAX_READINGS_TO_TEST sensor readings
         for (int i = 0; i < min(MAX_READINGS_TO_TEST, rawTags.size()); i++) {
