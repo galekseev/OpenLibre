@@ -15,10 +15,6 @@
         android:title="@string/action_sensor_status"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_tidepool_status"
-        android:title="@string/action_tidepool_status"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_enter_blood_glucose"
         android:title="@string/action_enter_blood_glucose"
         app:showAsAction="never"
@@ -78,7 +74,7 @@
                 android:id="@+id/action_debug_value2"
                 android:title="fake scan data"
                 app:showAsAction="never"
-                android:visible="false" />
+                android:visible="true" />
             <item
                 android:id="@+id/action_debug_make_crash"
                 android:title="crash app"

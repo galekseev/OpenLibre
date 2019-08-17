@@ -37,47 +37,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:key="category_tidepool"
-        android:title="Tidepool">
-
-        <EditTextPreference
-            android:key="pref_tidepool_username"
-            android:title="@string/pref_username"
-            android:summary="@string/pref_tidepool_username_summary"
-            android:dialogTitle="@string/pref_username" />
-
-        <EditTextPreference
-            android:key="pref_tidepool_password"
-            android:dependency="pref_tidepool_username"
-            android:title="@string/pref_password"
-            android:dialogTitle="@string/pref_password"
-            android:inputType="textPassword" />
-
-        <ListPreference
-            android:key="pref_tidepool_server"
-            android:dependency="pref_developer_mode"
-            android:title="@string/pref_server"
-            android:summary="@string/pref_tidepool_server_summary"
-            android:dialogTitle="@string/pref_server"
-            android:entries="@array/pref_tidepool_server_entries"
-            android:entryValues="@array/pref_tidepool_server_values"
-            android:defaultValue="@string/pref_tidepool_server_default" />
-
-        <CheckBoxPreference
-            android:key="pref_tidepool_auto_sync"
-            android:dependency="pref_tidepool_username"
-            android:title="@string/pref_tidepool_auto_sync"
-            android:summary="@string/pref_tidepool_auto_sync_summary"
-            android:defaultValue="true" />
-
-        <CheckBoxPreference
-            android:key="pref_tidepool_auto_sync_mobile"
-            android:dependency="pref_tidepool_auto_sync"
-            android:title="@string/pref_tidepool_auto_sync_mobile"
-            android:summary="@string/pref_tidepool_auto_sync_mobile_summary"
-            android:defaultValue="false" />
-
-    </PreferenceCategory>
-
 </PreferenceScreen>

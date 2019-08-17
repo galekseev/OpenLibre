@@ -172,11 +172,6 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
         MenuItem debugMenuItem = menu.findItem(R.id.action_debug_menu);
         debugMenuItem.setVisible(developerMode);
 
-        String tidepoolUsername = settings.getString("pref_tidepool_username", "");
-        String tidepoolPassword = settings.getString("pref_tidepool_password", "");
-        MenuItem tidepoolMenuItem = menu.findItem(R.id.action_tidepool_status);
-        tidepoolMenuItem.setVisible((!tidepoolUsername.equals("") && !tidepoolPassword.equals("")));
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -224,16 +219,8 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
             fpuCalculatorFragment.show(getSupportFragmentManager(), "fpucalculator");
             return true;
 
-        } else if (id == R.id.action_tidepool_status) {
-            new TidepoolStatusFragment().show(getSupportFragmentManager(), "tidepoolstatus");
-            return true;
-
         } else if (id == R.id.action_show_sensor_status) {
             new SensorStatusFragment().show(getSupportFragmentManager(), "sensorstatus");
-            return true;
-
-        } else if (id == R.id.action_export) {
-            new ExportFragment().show(getSupportFragmentManager(), "export");
             return true;
 
         } else if (id == R.id.action_about) {
@@ -326,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
                     gson.toJson(readingData, ReadingData.class, writer);
                 }
                 writer.endArray();
+                writer.endObject();
                 writer.flush();
                 writer.close();
             } catch (IOException e) {

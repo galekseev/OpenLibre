@@ -7,8 +7,6 @@ import android.preference.PreferenceManager;
 
 import com.camomile.openlibre.model.GlucoseData;
 
-import io.tidepool.api.APIClient;
-
 import static com.camomile.openlibre.OpenLibre.GLUCOSE_TARGET_MAX;
 import static com.camomile.openlibre.OpenLibre.GLUCOSE_TARGET_MIN;
 import static com.camomile.openlibre.OpenLibre.GLUCOSE_UNIT_IS_MMOL;
@@ -31,21 +29,6 @@ public class SettingsActivity extends Activity implements SharedPreferences.OnSh
     @Override
     public void onSharedPreferenceChanged(SharedPreferences settings, String key) {
         // when username or server changes update the key for the sync progress
-        if (key.equals("pref_tidepool_username") || key.equals("pref_tidepool_server")) {
-            // trim spaces off of email address
-            String tidepoolUsername = settings.getString("pref_tidepool_username", "").trim();
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("pref_tidepool_username", tidepoolUsername);
-            editor.apply();
-
-            String tidepoolServer = settings.getString("pref_tidepool_server", APIClient.PRODUCTION);
-
-            SharedPreferences.Editor preferencesEditor = getApplicationContext().getSharedPreferences("tidepool", MODE_PRIVATE).edit();
-            preferencesEditor.putString("upload_timestamp_key", "upload_timestamp_for_" + tidepoolUsername.toLowerCase() + "_at_" + tidepoolServer);
-            preferencesEditor.apply();
-
-        }
-
         if (key.equals("pref_glucose_unit_is_mmol")) {
             GLUCOSE_UNIT_IS_MMOL = settings.getBoolean("pref_glucose_unit_is_mmol", GLUCOSE_UNIT_IS_MMOL);
             SharedPreferences.Editor editor = settings.edit();
