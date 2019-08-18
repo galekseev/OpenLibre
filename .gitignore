@@ -9,3 +9,4 @@ user.gradle
 /build
 /captures
 .externalNativeBuild
+/keystore/*
