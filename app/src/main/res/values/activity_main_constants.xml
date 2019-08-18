@@ -2,5 +2,6 @@
 <resources>
     <integer name="viewpager_page_show_scan">0</integer>
     <integer name="viewpager_page_fragment_log">1</integer>
+    <integer name="viewpager_page_profile">2</integer>
 </resources>
 

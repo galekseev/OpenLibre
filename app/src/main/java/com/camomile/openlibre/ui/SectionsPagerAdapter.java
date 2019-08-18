@@ -21,16 +21,18 @@ class SectionsPagerAdapter extends SmartFragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         if (position == mContext.getResources().getInteger(R.integer.viewpager_page_show_scan))
-                return DataPlotFragment.newInstance();
+            return DataPlotFragment.newInstance();
         else if (position == mContext.getResources().getInteger(R.integer.viewpager_page_fragment_log))
-                return LogFragment.newInstance();
+            return LogFragment.newInstance();
+        else if (position == mContext.getResources().getInteger(R.integer.viewpager_page_profile))
+            return UserFragment.newInstance();
         return null;
     }
 
     @Override
     public int getCount() {
         // Show 2 total pages.
-        return 2;
+        return 3;
     }
 
     @Override
@@ -39,6 +41,8 @@ class SectionsPagerAdapter extends SmartFragmentStatePagerAdapter {
             return mContext.getResources().getString(R.string.fragment_title_scan);
         else if (position == mContext.getResources().getInteger(R.integer.viewpager_page_fragment_log))
             return mContext.getResources().getString(R.string.fragment_title_log);
+        else if (position == mContext.getResources().getInteger(R.integer.viewpager_page_profile))
+            return mContext.getResources().getString(R.string.fragment_title_profile);
         return null;
     }
 }

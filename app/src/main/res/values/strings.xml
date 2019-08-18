@@ -7,6 +7,7 @@
 
     <string name="fragment_title_scan">Scan</string>
     <string name="fragment_title_log">Log</string>
+    <string name="fragment_title_profile">User</string>
 
     <string name="action_show_last_scan">Last Scan</string>
     <string name="action_show_all_data">All Data</string>
@@ -121,5 +122,8 @@
     <string name="export_output_format">Format</string>
     <string name="export_output_format_json">JSON</string>
     <string name="export_output_format_csv">CSV</string>
+
+    <string name="please_login">Please, log in</string>
+    <string name="log_out">Log out</string>
 
 </resources>

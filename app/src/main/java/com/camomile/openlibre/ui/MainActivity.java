@@ -26,6 +26,8 @@ import com.camomile.openlibre.model.RawTagData;
 import com.camomile.openlibre.model.ReadingData;
 import com.camomile.openlibre.model.SensorData;
 import com.camomile.openlibre.service.NfcVReaderTask;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
 
@@ -69,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
     private Tag mLastNfcTag;
     private MainActivity mainActivity;
 
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -101,6 +105,20 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
             Log.e(LOG_ID,"No NFC adapter found!");
             Toast.makeText(this, getResources().getString(R.string.error_nfc_device_not_supported), Toast.LENGTH_LONG).show();
         }
+
+        //Firebase auth
+        mAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        String uid = "non-authorized";
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null)
+            uid = currentUser.getUid();
+        Log.d(LOG_ID, "User:" + uid);
     }
 
     @Override
