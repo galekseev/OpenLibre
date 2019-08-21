@@ -55,13 +55,11 @@
             <item
                 android:id="@+id/action_delete_debug_data"
                 android:title="delete debug data"
-                app:showAsAction="never"
-                android:visible="false" />
+                app:showAsAction="never" />
             <item
                 android:id="@+id/action_debug_not_ready"
                 android:title="sensor not ready"
-                app:showAsAction="never"
-                android:visible="false" />
+                app:showAsAction="never" />
             <item
                 android:id="@+id/action_debug_export_data"
                 android:title="export data"
