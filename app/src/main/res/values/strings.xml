@@ -76,8 +76,8 @@
     <string name="synchronize">Synchronize</string>
     <string name="synchronized_until" formatted="false">Synchronized until %s</string>
     <string name="not_synchronized">Not synchronized</string>
-    <string name="tidepool_sync_success">Successfully synchronized with Tidepool.</string>
-    <string name="tidepool_sync_error">Error synchronizing with Tidepool.</string>
+    <string name="cloudstore_sync_success">Successfully synchronized</string>
+    <string name="cloudstore_sync_error">Error synchronizing with cloud</string>
 
     <string name="error_nfc_device_not_supported">"This device doesn't support NFC."</string>
     <string name="error_nfc_disabled">NFC is disabled, please enable in device settings.</string>

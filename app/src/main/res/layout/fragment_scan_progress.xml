@@ -53,6 +53,7 @@
         android:text="@string/sensor_ready_in"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/colorAccent"
+        android:visibility="gone"/>
 
 </LinearLayout>
