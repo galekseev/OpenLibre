@@ -10,3 +10,4 @@ user.gradle
 /captures
 .externalNativeBuild
 /keystore/*
+/app/google-services.json
