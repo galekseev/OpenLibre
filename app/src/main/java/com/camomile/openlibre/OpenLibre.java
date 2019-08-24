@@ -17,6 +17,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.camomile.openlibre.R;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -48,6 +50,12 @@ public class OpenLibre extends Application {
         setupRealm(getApplicationContext());
 
         parseRawData();
+
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        firestore.setFirestoreSettings(settings);
 
         StethoUtils.install(this, openLibreDataPath);
     }

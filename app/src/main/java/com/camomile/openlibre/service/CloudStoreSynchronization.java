@@ -55,6 +55,7 @@ public class CloudStoreSynchronization {
         if (progressCallBack != null) {
             progressCallBack.finished();
         }
+        Log.d(LOG_ID, "sync task completed");
     }
 
     public void registerProgressUpdateCallback(CloudStoreSynchronization.ProgressCallBack progressCallBack) {
