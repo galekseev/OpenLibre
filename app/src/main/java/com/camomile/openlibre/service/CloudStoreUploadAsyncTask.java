@@ -25,48 +25,17 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.camomile.openlibre.OpenLibre.realmConfigRawData;
 
 
-class CloudStoreUploadTask extends AsyncTask<Void, Void, Boolean> {
+class CloudStoreUploadAsyncTask extends CloudStoreAsyncTask {
 
-    private static final String LOG_ID = "OpenLibre::" + CloudStoreUploadTask.class.getSimpleName();
+    private static final String LOG_ID = "OpenLibre::" + CloudStoreUploadAsyncTask.class.getSimpleName();
 
-    private Context context;
-    private CloudStoreSynchronization cloudstoreSynchronization;
-
-    CloudStoreUploadTask(Context context, CloudStoreSynchronization cloudstoreSynchronization) {
-        this.context = context;
-        this.cloudstoreSynchronization = cloudstoreSynchronization;
+    CloudStoreUploadAsyncTask(Context context, CloudStoreSynchronization cloudstoreSynchronization) {
+        super(context, cloudstoreSynchronization);
     }
 
     @Override
-    protected void onPostExecute(Boolean success) {
-        if (success) {
-            Toast.makeText(context,
-                    context.getString(R.string.cloudstore_sync_success),
-                    Toast.LENGTH_SHORT
-            ).show();
-        } else {
-            Toast.makeText(context,
-                    context.getString(R.string.cloudstore_sync_error),
-                    Toast.LENGTH_SHORT
-            ).show();
-        }
-        cloudstoreSynchronization.finished();
-    }
-
-    @Override
-    protected void onCancelled() {
-        cloudstoreSynchronization.finished();
-    }
-
-    @Override
-    protected Boolean doInBackground(Void... params) {
-        return uploadData();
-    }
-
-    private boolean uploadData() {
+    public boolean syncData() {
         try {
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-
             FirebaseAuth auth = FirebaseAuth.getInstance();
             FirebaseUser currentUser = auth.getCurrentUser();
 
@@ -75,11 +44,12 @@ class CloudStoreUploadTask extends AsyncTask<Void, Void, Boolean> {
                 Log.d(LOG_ID, "User is not authenticated");
                 return false;
             }
+
             //TODO research a way to reduce number of queries to Firebase CloudStore
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             Realm realmProcessedData = Realm.getInstance(realmConfigRawData);
 
-            SharedPreferences preferences = context.getSharedPreferences("tidepool", MODE_PRIVATE);
+            SharedPreferences preferences = context.getSharedPreferences("cloudstore", MODE_PRIVATE);
             String cloudstoreUploadTimestampKey = preferences.getString("upload_cloudstore_key", "upload_timestamp");
             long cloudstoreUploadTimestamp = preferences.getLong(cloudstoreUploadTimestampKey, 0);
 
@@ -103,16 +73,18 @@ class CloudStoreUploadTask extends AsyncTask<Void, Void, Boolean> {
 
                 HashMap<String, Object> dbDataItem = new HashMap<>();
                 //dbDataItem.put("timestamp", date);
-                dbDataItem.put("tagid", tagid);
-                dbDataItem.put("data", base64data);
+                dbDataItem.put("i", tagid);
+                dbDataItem.put("d", base64data);
+                dbDataItem.put("t", date);
 
-                db.collection(currentUser.getUid()).document(String.valueOf(date))
+                db.collection(currentUser.getUid())
+                        .document()
                         .set(dbDataItem);
 
                 cloudstoreUploadTimestamp = date;
 
                 float progress = (i+1) / (float) countAllNewRawData;
-                Log.d(CloudStoreUploadTask.LOG_ID, "Uploaded until: " + new Date(cloudstoreUploadTimestamp) + ", progress: " + progress);
+                Log.d(LOG_ID, "Uploaded until: " + new Date(cloudstoreUploadTimestamp) + ", progress: " + progress);
                 cloudstoreSynchronization.updateProgress(progress, new Date(cloudstoreUploadTimestamp));
             }
 

@@ -17,7 +17,7 @@ public class CloudStoreSynchronization {
 
     private static CloudStoreSynchronization instance;
 
-    private CloudStoreUploadTask cloodstoreUploadTask;
+    private CloudStoreAsyncTask cloudstoreUploadTask;
     private float progress;
     private Date progressDate;
     private boolean synchronizationRunning;
@@ -51,7 +51,7 @@ public class CloudStoreSynchronization {
 
     void finished() {
         synchronizationRunning = false;
-        cloodstoreUploadTask = null;
+        cloudstoreUploadTask = null;
         if (progressCallBack != null) {
             progressCallBack.finished();
         }
@@ -71,22 +71,26 @@ public class CloudStoreSynchronization {
     }
 
     public void cancelSynchronization() {
-        if (cloodstoreUploadTask != null) {
-            cloodstoreUploadTask.cancel(false);
+        if (cloudstoreUploadTask != null) {
+            cloudstoreUploadTask.cancel(false);
         }
     }
 
-    public void startManualSynchronization(Context context) {
-        if (cloodstoreUploadTask == null) {
+    public void startManualUpload(Context context) {
+        if (cloudstoreUploadTask == null) {
             Log.d(LOG_ID, "starting new sync task");
-            cloodstoreUploadTask = new CloudStoreUploadTask(context, this);
-            cloodstoreUploadTask.execute();
+            cloudstoreUploadTask = new CloudStoreUploadAsyncTask(context, this);
+            cloudstoreUploadTask.execute();
             synchronizationRunning = true;
         }
     }
 
-    public void startTriggeredSynchronization(Context context) {
-        Log.d(LOG_ID, "startTriggeredSynchronization");
+    public void startManualDownload(Context context) {
+
+    }
+
+    public void startTriggeredUpload(Context context) {
+        Log.d(LOG_ID, "startTriggeredUpload");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         boolean autoSync = settings.getBoolean("pref_cloudstore_auto_sync", AUTOSYNC_ENABLED_DEFAULT);
         if (!autoSync) {
@@ -116,6 +120,6 @@ public class CloudStoreSynchronization {
             }
         }
 
-        startManualSynchronization(context);
+        startManualUpload(context);
     }
 }

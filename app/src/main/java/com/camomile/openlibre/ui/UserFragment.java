@@ -116,7 +116,7 @@ public class UserFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        //TODO Handle sign-in error
         if (requestCode == 0) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 

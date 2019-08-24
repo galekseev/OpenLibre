@@ -401,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
     public void onNfcReadingFinished(ReadingData readingData) {
         mLastScanTime = new Date().getTime();
         onShowScanData(readingData);
-        CloudStoreSynchronization.getInstance().startTriggeredSynchronization(getApplicationContext());
+        CloudStoreSynchronization.getInstance().startTriggeredUpload(getApplicationContext());
     }
 
 

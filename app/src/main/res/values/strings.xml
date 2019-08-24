@@ -13,7 +13,7 @@
     <string name="action_show_all_data">All Data</string>
     <string name="action_enter_blood_glucose">Enter BGL</string>
     <string name="action_show_fpu_calculator">FPU Calculator</string>
-    <string name="action_tidepool_status">Tidepool Status</string>
+    <string name="action_cloudstore_status">Firebase CloudStore Status</string>
     <string name="action_sensor_status">Sensor Status</string>
     <string name="action_settings">Settings</string>
     <string name="action_debug">Debug</string>
@@ -94,14 +94,14 @@
     <string name="crash_dialog_comment_prompt">If you like, you can describe what happened before the crash:</string>
     <string name="crash_dialog_ok_toast">Thank you very much for your crash report!</string>
 
-    <string name="pref_tidepool_auto_sync">Automatic Synchronization</string>
-    <string name="pref_tidepool_auto_sync_summary">Upload CGM data to Tidepool servers on each sensor readout.</string>
+    <string name="pref_cloudstore_auto_sync">Automatic Synchronization</string>
+    <string name="pref_cloudstore_auto_sync_summary">Upload CGM data to Tidepool servers on each sensor readout.</string>
     <string name="pref_username">Username</string>
     <string name="pref_password">Password</string>
     <string name="pref_server">Server</string>
     <string name="pref_tidepool_server_default" translatable="false">Production</string>
-    <string name="pref_tidepool_auto_sync_mobile">Also via mobile network</string>
-    <string name="pref_tidepool_auto_sync_mobile_summary">Automatically synchronize also via mobile data service.</string>
+    <string name="pref_cloudstore_auto_sync_mobile">Also via mobile network</string>
+    <string name="pref_cloudstore_auto_sync_mobile_summary">Automatically synchronize also via mobile data service.</string>
     <string name="pref_tidepool_username_summary">The username is usually your email address.</string>
     <string name="pref_tidepool_server_summary">Tidepool server to use (default: Production).</string>
     <string name="pref_developer_mode">Developer Mode</string>
