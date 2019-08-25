@@ -17,7 +17,7 @@ public class CloudStoreSynchronization {
 
     private static CloudStoreSynchronization instance;
 
-    private CloudStoreAsyncTask cloudstoreUploadTask;
+    private CloudStoreAsyncTask cloudstoreSyncTask;
     private float progress;
     private Date progressDate;
     private boolean synchronizationRunning;
@@ -51,7 +51,7 @@ public class CloudStoreSynchronization {
 
     void finished() {
         synchronizationRunning = false;
-        cloudstoreUploadTask = null;
+        cloudstoreSyncTask = null;
         if (progressCallBack != null) {
             progressCallBack.finished();
         }
@@ -72,31 +72,46 @@ public class CloudStoreSynchronization {
     }
 
     public void cancelSynchronization() {
-        if (cloudstoreUploadTask != null) {
-            cloudstoreUploadTask.cancel(false);
+        if (cloudstoreSyncTask != null) {
+            cloudstoreSyncTask.cancel(false);
         }
     }
 
     public void startManualUpload(Context context) {
-        if (cloudstoreUploadTask == null) {
+        if (cloudstoreSyncTask == null) {
             Log.d(LOG_ID, "starting new sync task");
-            cloudstoreUploadTask = new CloudStoreUploadAsyncTask(context, this);
-            cloudstoreUploadTask.execute();
+            cloudstoreSyncTask = new CloudStoreUploadAsyncTask(context, this);
+            cloudstoreSyncTask.execute();
             synchronizationRunning = true;
         }
     }
 
     public void startManualDownload(Context context) {
-
+        if (cloudstoreSyncTask == null) {
+            Log.d(LOG_ID, "starting new sync task");
+            cloudstoreSyncTask = new CloudStoreDownloadAsyncTask(context, this);
+            cloudstoreSyncTask.execute();
+            synchronizationRunning = true;
+        }
     }
 
     public void startTriggeredUpload(Context context) {
+        if (!checkIfConnected(context)) return;
+        startManualUpload(context);
+    }
+
+    public void startTriggeredDownload(Context context){
+        if(!checkIfConnected(context)) return;
+        startManualDownload(context);
+    }
+
+    private boolean checkIfConnected(Context context) {
         Log.d(LOG_ID, "startTriggeredUpload");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         boolean autoSync = settings.getBoolean("pref_cloudstore_auto_sync", AUTOSYNC_ENABLED_DEFAULT);
         if (!autoSync) {
             Log.d(LOG_ID, "not syncing: auto sync is disabled");
-            return;
+            return false;
         }
 
         Log.d(LOG_ID, "checking connection");
@@ -106,7 +121,7 @@ public class CloudStoreSynchronization {
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
             Log.d(LOG_ID, "not syncing: not connected");
-            return;
+            return false;
         }
 
         Log.d(LOG_ID, "checking connection type");
@@ -117,10 +132,10 @@ public class CloudStoreSynchronization {
             boolean autoSyncMobile = settings.getBoolean("pref_cloudstore_auto_sync_mobile", AUTOSYNC_MOBILE_DEFAULT);
             if (!autoSyncMobile) {
                 Log.d(LOG_ID, "not syncing: mobile connection and auto sync mobile is disabled");
-                return;
+                return false;
             }
         }
 
-        startManualUpload(context);
+        return true;
     }
 }

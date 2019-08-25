@@ -1,0 +1,97 @@
+package com.camomile.openlibre.service;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Base64;
+import android.util.Log;
+
+import com.camomile.openlibre.BuildConfig;
+import com.camomile.openlibre.model.RawTagData;
+import com.google.android.gms.tasks.Task;
+
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
+
+class CloudStoreDownloadAsyncTask extends CloudStoreAsyncTask {
+
+    private static final String LOG_ID = "OpenLibre::" + CloudStoreDownloadAsyncTask.class.getSimpleName();
+
+    CloudStoreDownloadAsyncTask(Context context, CloudStoreSynchronization cloudstoreSynchronization) {
+        super(context, cloudstoreSynchronization);
+    }
+
+    @Override
+    public boolean syncData() {
+
+        SharedPreferences preferences = context.getSharedPreferences("cloudstore", MODE_PRIVATE);
+        String cloudstoreDownloadTimestampKey = preferences.getString("download_cloudstore_key", "download_timestamp");
+        long cloudstoreDownloadTimestamp = preferences.getLong(cloudstoreDownloadTimestampKey, 0);
+
+        if (BuildConfig.DEBUG) cloudstoreDownloadTimestamp = 0;
+
+        String collectionId = getCollectionId();
+
+        if (collectionId == null) return false;
+
+        //TODO research a way to reduce number of queries to Firebase CloudStore
+        try {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            Log.d(LOG_ID,"Start quering data");
+            Task<QuerySnapshot> task = db.collection(collectionId)
+                    .whereGreaterThan("t", cloudstoreDownloadTimestamp)
+                    .orderBy("t", Query.Direction.ASCENDING)
+                    .limit(1000)
+                    .get();
+
+            Tasks.await(task);
+
+            Log.v(LOG_ID, "Query completed");
+            if (task.isComplete() && task.isSuccessful()){
+
+                QuerySnapshot querySnapshot = task.getResult();
+                if (querySnapshot.isEmpty()){
+                    Log.d(LOG_ID, "Empty result set returned");
+                    return true;
+                }
+
+                List<RawTagData> rawTagDataList = new ArrayList<RawTagData>();
+                for (QueryDocumentSnapshot document: querySnapshot){
+                    String sensor = document.getString("s");
+                    long timestamp = document.getLong("t");
+                    String dataString = document.getString("d");
+                    byte[] data = Base64.decode(dataString, Base64.DEFAULT);
+                    Log.v(LOG_ID, String.format("Reading data: t=%s ; s=%s", timestamp, sensor));
+                    rawTagDataList.add(new RawTagData(sensor, data));
+                    cloudstoreDownloadTimestamp = timestamp;
+                }
+
+                Log.d(LOG_ID, String.format("Read %s tags", rawTagDataList.size()));
+                NfcVReaderTask.processRawDataList(rawTagDataList);
+
+                cloudstoreSynchronization.updateProgress(1, new Date(cloudstoreDownloadTimestamp));
+            }
+        }
+        catch (Exception e) {
+            Log.e(LOG_ID, "Error: " + e.toString());
+            e.printStackTrace();
+        }
+        finally {
+            SharedPreferences.Editor preferencesEditor = preferences.edit();
+            preferencesEditor.putLong(cloudstoreDownloadTimestampKey, cloudstoreDownloadTimestamp);
+            preferencesEditor.apply();
+        }
+
+        return true;
+    }
+}

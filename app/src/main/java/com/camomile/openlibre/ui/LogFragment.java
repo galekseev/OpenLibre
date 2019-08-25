@@ -2,7 +2,6 @@ package com.camomile.openlibre.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +14,8 @@ import com.camomile.openlibre.model.ReadingData;
 
 import com.camomile.openlibre.R;
 import com.camomile.openlibre.service.CloudStoreSynchronization;
+
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.Sort;
@@ -72,36 +73,39 @@ public class LogFragment extends Fragment implements SwipeRefreshLayout.OnRefres
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         // Set the adapter
-//        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = view.findViewById(R.id.log_list_recycle_view);
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new LogRecyclerViewAdapter(this,
-                    mRealmProcessedData
-                            .where(ReadingData.class)
-                            .isNotEmpty(ReadingData.TREND)
-                            .sort(ReadingData.DATE, Sort.DESCENDING)
-                            .findAllAsync()
-            ));
-            recyclerView.setHasFixedSize(true);
-            recyclerView.addItemDecoration(
-                    new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL_LIST)
-            );
-            registerForContextMenu(recyclerView);
+        Context context = view.getContext();
+        RecyclerView recyclerView = view.findViewById(R.id.log_list_recycle_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(new LogRecyclerViewAdapter(this,
+                mRealmProcessedData
+                        .where(ReadingData.class)
+                        .isNotEmpty(ReadingData.TREND)
+                        .sort(ReadingData.DATE, Sort.DESCENDING)
+                        .findAllAsync()
+        ));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(
+                new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL_LIST)
+        );
+        registerForContextMenu(recyclerView);
 //        }
         return view;
     }
 
     @Override
     public void onRefresh() {
-        new Handler().post(new Runnable() {
+        final CloudStoreSynchronization sync = CloudStoreSynchronization.getInstance();
+        sync.registerProgressUpdateCallback(new CloudStoreSynchronization.ProgressCallBack() {
             @Override
-            public void run() {
-                //CloudStoreSynchronization.getInstance().
-                // Hide update animation
+            public void updateProgress(float progress, Date currentDate) { }
+            @Override
+            public void finished() {
                 mSwipeRefreshLayout.setRefreshing(false);
+                sync.unregisterProgressUpdateCallback();
+
             }
         });
+        sync.startTriggeredDownload(getActivity().getApplicationContext());
     }
 
     public void showScanData(final ReadingData readingData) {

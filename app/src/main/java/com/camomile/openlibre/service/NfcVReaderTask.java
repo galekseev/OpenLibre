@@ -14,7 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.camomile.openlibre.OpenLibre;
@@ -201,5 +203,27 @@ public class NfcVReaderTask extends AsyncTask<Tag, Void, Boolean> {
         realmRawData.close();
 
         return readingData;
+    }
+
+    public static void processRawDataList(List<RawTagData> rawTagDataList){
+        Realm realmProcessedData = Realm.getInstance(realmConfigProcessedData);
+        Realm realmRawData = Realm.getInstance(realmConfigRawData);
+
+        realmRawData.beginTransaction();
+        List<RawTagData> realmRawTagDataList = new ArrayList<RawTagData>();
+        for(RawTagData rawTagData: rawTagDataList){
+            RawTagData realmRawTagData = realmRawData.copyToRealmOrUpdate(rawTagData);
+            realmRawTagDataList.add(realmRawTagData);
+        }
+        realmRawData.commitTransaction();
+
+        realmProcessedData.beginTransaction();
+        for(RawTagData rawTagData: realmRawTagDataList){
+            realmProcessedData.copyToRealmOrUpdate(new ReadingData(rawTagData));
+        }
+        realmProcessedData.commitTransaction();
+
+        realmProcessedData.close();
+        realmRawData.close();
     }
 }

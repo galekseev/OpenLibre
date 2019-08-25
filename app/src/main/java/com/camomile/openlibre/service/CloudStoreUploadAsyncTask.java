@@ -39,14 +39,9 @@ class CloudStoreUploadAsyncTask extends CloudStoreAsyncTask {
         Realm realmProcessedData = Realm.getInstance(realmConfigRawData);
 
         try {
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-            FirebaseUser currentUser = auth.getCurrentUser();
 
-            if (currentUser == null)
-            {
-                Log.d(LOG_ID, "User is not authenticated");
-                return false;
-            }
+            String collectionId = getCollectionId();
+            if (collectionId == null) return false;
 
             //TODO research a way to reduce number of queries to Firebase CloudStore
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -75,7 +70,7 @@ class CloudStoreUploadAsyncTask extends CloudStoreAsyncTask {
                 dbDataItem.put("d", base64data);
                 dbDataItem.put("t", date);
 
-                Task addDocTask = db.collection(currentUser.getUid())
+                Task addDocTask = db.collection(collectionId)
                         .document()
                         .set(dbDataItem);
 

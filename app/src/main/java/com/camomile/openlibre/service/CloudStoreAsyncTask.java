@@ -63,5 +63,19 @@ abstract class CloudStoreAsyncTask extends AsyncTask<Void, Void, Boolean> {
         return syncData();
     }
 
+    protected static String getCollectionId()
+    {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        if (currentUser == null)
+        {
+            Log.d(LOG_ID, "User is not authenticated");
+            return null;
+        }
+
+        return currentUser.getUid();
+    }
+
     public abstract boolean syncData();
 }
