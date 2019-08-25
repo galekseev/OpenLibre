@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Log;
 
-import com.camomile.openlibre.BuildConfig;
+//import com.camomile.openlibre.BuildConfig;
 import com.camomile.openlibre.model.RawTagData;
 import com.google.android.gms.tasks.Task;
 
@@ -37,7 +37,7 @@ class CloudStoreDownloadAsyncTask extends CloudStoreAsyncTask {
         String cloudstoreDownloadTimestampKey = preferences.getString("download_cloudstore_key", "download_timestamp");
         long cloudstoreDownloadTimestamp = preferences.getLong(cloudstoreDownloadTimestampKey, 0);
 
-        if (BuildConfig.DEBUG) cloudstoreDownloadTimestamp = 0;
+        //if (BuildConfig.DEBUG) cloudstoreDownloadTimestamp = 0;
 
         String collectionId = getCollectionId();
 
@@ -68,12 +68,12 @@ class CloudStoreDownloadAsyncTask extends CloudStoreAsyncTask {
                 List<RawTagData> rawTagDataList = new ArrayList<RawTagData>();
                 for (QueryDocumentSnapshot document: querySnapshot){
                     String sensor = document.getString("s");
-                    long timestamp = document.getLong("t");
+                    long utc_date = document.getLong("t");
                     String dataString = document.getString("d");
                     byte[] data = Base64.decode(dataString, Base64.DEFAULT);
-                    Log.v(LOG_ID, String.format("Reading data: t=%s ; s=%s", timestamp, sensor));
-                    rawTagDataList.add(new RawTagData(sensor, data));
-                    cloudstoreDownloadTimestamp = timestamp;
+                    Log.v(LOG_ID, String.format("Reading data: t=%s ; s=%s", utc_date, sensor));
+                    rawTagDataList.add(new RawTagData(sensor, utc_date, data));
+                    cloudstoreDownloadTimestamp = utc_date;
                 }
 
                 Log.d(LOG_ID, String.format("Read %s tags", rawTagDataList.size()));

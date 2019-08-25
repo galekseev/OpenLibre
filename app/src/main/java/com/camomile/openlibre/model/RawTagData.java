@@ -33,7 +33,11 @@ public class RawTagData extends RealmObject {
     public RawTagData() {}
 
     public RawTagData(String tagId, byte[] data) {
-        date = System.currentTimeMillis();
+        this(tagId, System.currentTimeMillis(), data);
+    }
+
+    public RawTagData(String tagId, long utc_date, byte[] data) {
+        date = utc_date;
         timezoneOffsetInMinutes = TimeZone.getDefault().getOffset(date) / 1000 / 60;
         this.tagId = tagId;
         id = String.format(Locale.US, "%s_%d", tagId, date);
