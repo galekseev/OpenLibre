@@ -84,17 +84,17 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
         mRealmProcessedData = Realm.getInstance(realmConfigProcessedData);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), getApplicationContext());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mViewPager = findViewById(R.id.view_pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager);
 
         mNfcAdapter = ((NfcManager) this.getSystemService(Context.NFC_SERVICE)).getDefaultAdapter();
@@ -188,9 +188,9 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
 
         // show debug menu only in developer mode
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean developerMode = BuildConfig.DEBUG || settings.getBoolean("pref_developer_mode", false);
-//        MenuItem debugMenuItem = menu.findItem(R.id.action_debug_menu);
-//        debugMenuItem.setVisible(developerMode);
+        boolean developerMode = settings.getBoolean("pref_developer_mode", false) || BuildConfig.DEBUG;
+        MenuItem debugMenuItem = menu.findItem(R.id.action_debug_menu);
+        debugMenuItem.setVisible(developerMode);
 
         return super.onPrepareOptionsMenu(menu);
     }
