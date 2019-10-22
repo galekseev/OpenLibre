@@ -12,8 +12,6 @@ import java.util.List;
 import com.camomile.openlibre.model.RawTagData;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import io.realm.Realm;
@@ -22,16 +20,20 @@ import io.realm.Sort;
 import static android.content.Context.MODE_PRIVATE;
 import static com.camomile.openlibre.OpenLibre.realmConfigRawData;
 
-class CloudStoreUploadAsyncTask extends CloudStoreAsyncTask {
+class CloudStoreUploadDataTask extends CloudStoreDataTask {
 
-    private static final String LOG_ID = "OpenLibre::" + CloudStoreUploadAsyncTask.class.getSimpleName();
+    private static final String LOG_ID = "OpenLibre::" + CloudStoreUploadDataTask.class.getSimpleName();
+    public static final String TASK_TYPE = "UPLOAD_NEW_DATA";
 
-    CloudStoreUploadAsyncTask(Context context, CloudStoreSynchronization cloudstoreSynchronization) {
+    CloudStoreUploadDataTask(Context context, CloudStoreSynchronization cloudstoreSynchronization) {
         super(context, cloudstoreSynchronization);
     }
 
     @Override
-    public boolean syncData() {
+    public String getTaskType() { return TASK_TYPE; }
+
+    @Override
+    public boolean doWork() {
         SharedPreferences preferences = context.getSharedPreferences("cloudstore", MODE_PRIVATE);
         String cloudstoreUploadTimestampKey = preferences.getString("upload_cloudstore_key", "upload_timestamp");
         long cloudstoreUploadTimestamp = preferences.getLong(cloudstoreUploadTimestampKey, 0);
@@ -46,7 +48,7 @@ class CloudStoreUploadAsyncTask extends CloudStoreAsyncTask {
             //TODO research a way to reduce number of queries to Firebase CloudStore
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            cloudstoreSynchronization.updateProgress(0, new Date(cloudstoreUploadTimestamp));
+            //cloudstoreSynchronization.updateProgress(0, new Date(cloudstoreUploadTimestamp));
 
             // find data that has not be uploaded yet
             List<RawTagData> newRawData = realmProcessedData.where(RawTagData.class)
@@ -80,7 +82,7 @@ class CloudStoreUploadAsyncTask extends CloudStoreAsyncTask {
 
                 float progress = (i+1) / (float) countAllNewRawData;
                 Log.d(LOG_ID, "Uploaded until: " + new Date(cloudstoreUploadTimestamp) + ", progress: " + progress);
-                cloudstoreSynchronization.updateProgress(progress, new Date(cloudstoreUploadTimestamp));
+                //cloudstoreSynchronization.updateProgress(progress, new Date(cloudstoreUploadTimestamp));
             }
 
         } catch (Exception e) {
@@ -96,5 +98,10 @@ class CloudStoreUploadAsyncTask extends CloudStoreAsyncTask {
             preferencesEditor.apply();
         }
         return true;
+    }
+
+    @Override
+    public Object getResult(){
+        return null;
     }
 }

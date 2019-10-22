@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.camomile.openlibre.model.ProcessedDataModule;
@@ -16,9 +17,21 @@ import com.camomile.openlibre.model.UserDataModule;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.camomile.openlibre.R;
+import com.camomile.openlibre.model.db.UserProfile;
+import com.camomile.openlibre.service.CloudStoreSignInTask;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -34,10 +47,21 @@ public class OpenLibre extends Application {
     public static float GLUCOSE_TARGET_MIN = 80;
     public static float GLUCOSE_TARGET_MAX = 140;
 
+    // realm db
     public static RealmConfiguration realmConfigRawData;
     public static RealmConfiguration realmConfigProcessedData;
     public static RealmConfiguration realmConfigUserData;
     public static File openLibreDataPath;
+
+    // auth
+    public static String deviceAppToken;
+
+    // Firestore
+    public static FirebaseFirestore firestore = null;
+    public static CollectionReference usersCollection = null;
+
+    //User profile
+    public static UserProfile userProfile = null;
 
     @Override
     public void onCreate() {
@@ -51,13 +75,48 @@ public class OpenLibre extends Application {
 
         parseRawData();
 
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
-        firestore.setFirestoreSettings(settings);
+        firestore = FirebaseFirestore.getInstance();
+        usersCollection = firestore.collection("users");
+
+        setupAccount();
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(
+                new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(LOG_ID, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        deviceAppToken = task.getResult().getToken();
+                        Log.d(LOG_ID, "app token: " + deviceAppToken);
+                    }
+                }
+        );
 
         StethoUtils.install(this, openLibreDataPath);
+    }
+
+    private void setupAccount() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            usersCollection.document(user.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()){
+                        userProfile = task.getResult().toObject(UserProfile.class);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 
     public static void refreshApplicationSettings(SharedPreferences settings) {
@@ -154,6 +213,25 @@ public class OpenLibre extends Application {
 
         realmProcessedData.close();
         realmRawData.close();
+    }
+
+    public static void clearRealmData(Context application){
+        Realm realmRawData = Realm.getInstance(realmConfigRawData);
+        Realm realmProcessedData = Realm.getInstance(realmConfigProcessedData);
+
+        realmRawData.beginTransaction();
+        realmRawData.deleteAll();
+        realmRawData.commitTransaction();
+
+        realmProcessedData.beginTransaction();
+        realmProcessedData.deleteAll();
+        realmProcessedData.commitTransaction();
+
+        SharedPreferences preferences = application.getSharedPreferences("cloudstore", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        String cloudstoreDownloadTimestampKey = preferences.getString("download_cloudstore_key", "download_timestamp");
+        editor.putLong(cloudstoreDownloadTimestampKey, 0);
+        editor.apply();
     }
 
     private static boolean tryRealmStorage(File path) {

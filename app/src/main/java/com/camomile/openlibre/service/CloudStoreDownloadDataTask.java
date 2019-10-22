@@ -15,28 +15,32 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
-class CloudStoreDownloadAsyncTask extends CloudStoreAsyncTask {
+class CloudStoreDownloadDataTask extends CloudStoreDataTask {
 
-    private static final String LOG_ID = "OpenLibre::" + CloudStoreDownloadAsyncTask.class.getSimpleName();
+    private static final String LOG_ID = "OpenLibre::" + CloudStoreDownloadDataTask.class.getSimpleName();
+    public static final String TASK_TYPE = "DOWNLOAD_NEW_DATA";
 
-    CloudStoreDownloadAsyncTask(Context context, CloudStoreSynchronization cloudstoreSynchronization) {
+    CloudStoreDownloadDataTask(Context context, CloudStoreSynchronization cloudstoreSynchronization) {
         super(context, cloudstoreSynchronization);
     }
 
     @Override
-    public boolean syncData() {
+    public String getTaskType(){ return TASK_TYPE; }
+
+    @Override
+    public boolean doWork() {
 
         SharedPreferences preferences = context.getSharedPreferences("cloudstore", MODE_PRIVATE);
         String cloudstoreDownloadTimestampKey = preferences.getString("download_cloudstore_key", "download_timestamp");
         long cloudstoreDownloadTimestamp = preferences.getLong(cloudstoreDownloadTimestampKey, 0);
 
+        //cloudstoreDownloadTimestamp = 0;
         //if (BuildConfig.DEBUG) cloudstoreDownloadTimestamp = 0;
 
         String collectionId = getCollectionId();
@@ -79,7 +83,7 @@ class CloudStoreDownloadAsyncTask extends CloudStoreAsyncTask {
                 Log.d(LOG_ID, String.format("Read %s tags", rawTagDataList.size()));
                 NfcVReaderTask.processRawDataList(rawTagDataList);
 
-                cloudstoreSynchronization.updateProgress(1, new Date(cloudstoreDownloadTimestamp));
+                //cloudstoreSynchronization.updateProgress(1, new Date(cloudstoreDownloadTimestamp));
             }
         }
         catch (Exception e) {

@@ -125,5 +125,13 @@
 
     <string name="please_login">Please, log in</string>
     <string name="log_out">Log out</string>
+    <string name="default_notification_channel_id">openlibre_channel</string>
+    <string name="button_link_account">Link</string>
+    <string name="button_unlink_account">Unlink</string>
+    <string name="button_cancel_link_request">Cancel link</string>
+    <string name="button_sync_link_request">Refresh</string>
+    <string name="button_allow_link">Allow</string>
+    <string name="button_deny_link">Deny</string>
+    <string name="button_unlink_link">Unlink</string>
 
 </resources>

@@ -2,6 +2,7 @@ package com.camomile.openlibre.ui;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -40,6 +41,7 @@ class LogRecyclerViewAdapter
         PreferenceManager.getDefaultSharedPreferences(fragment.getContext()).registerOnSharedPreferenceChangeListener(this);
     }
 
+    @NonNull
     @Override
     public LogRowViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_log_row, parent, false);
@@ -47,7 +49,7 @@ class LogRecyclerViewAdapter
     }
 
     @Override
-    public void onBindViewHolder(LogRowViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LogRowViewHolder holder, int position) {
         ReadingData readingData;
         try {
             readingData = getData().get(position);

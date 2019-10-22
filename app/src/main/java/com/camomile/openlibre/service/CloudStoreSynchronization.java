@@ -9,15 +9,15 @@ import android.util.Log;
 
 import java.util.Date;
 
-public class CloudStoreSynchronization {
+public class CloudStoreSynchronization implements ITaskContainer {
 
     private static final String LOG_ID = "OpenLibre::" + CloudStoreSynchronization.class.getSimpleName();
-    private static boolean AUTOSYNC_ENABLED_DEFAULT = true;
-    private static boolean AUTOSYNC_MOBILE_DEFAULT = true;
+    public static boolean AUTOSYNC_ENABLED_DEFAULT = true;
+    public static boolean AUTOSYNC_MOBILE_DEFAULT = true;
 
     private static CloudStoreSynchronization instance;
 
-    private CloudStoreAsyncTask cloudstoreSyncTask;
+    private CloudStoreDataTask cloudstoreSyncTask;
     private float progress;
     private Date progressDate;
     private boolean synchronizationRunning;
@@ -49,7 +49,13 @@ public class CloudStoreSynchronization {
         }
     }
 
-    void finished() {
+    public void onTaskSuccess(CloudStoreTask task) { postExecute(); }
+
+    public void onTaskError(CloudStoreTask task){ postExecute(); }
+
+    public void onTaskCancelled(CloudStoreTask task) { postExecute(); }
+
+    private void postExecute(){
         synchronizationRunning = false;
         cloudstoreSyncTask = null;
         if (progressCallBack != null) {
@@ -80,7 +86,7 @@ public class CloudStoreSynchronization {
     public void startManualUpload(Context context) {
         if (cloudstoreSyncTask == null) {
             Log.d(LOG_ID, "starting new sync task");
-            cloudstoreSyncTask = new CloudStoreUploadAsyncTask(context, this);
+            cloudstoreSyncTask = new CloudStoreUploadDataTask(context, this);
             cloudstoreSyncTask.execute();
             synchronizationRunning = true;
         }
@@ -89,7 +95,7 @@ public class CloudStoreSynchronization {
     public void startManualDownload(Context context) {
         if (cloudstoreSyncTask == null) {
             Log.d(LOG_ID, "starting new sync task");
-            cloudstoreSyncTask = new CloudStoreDownloadAsyncTask(context, this);
+            cloudstoreSyncTask = new CloudStoreDownloadDataTask(context, this);
             cloudstoreSyncTask.execute();
             synchronizationRunning = true;
         }
