@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
         mLastScanTime = new Date().getTime();
         onShowScanData(readingData);
         //TODO Uncomment
-        //CloudStoreSynchronization.getInstance().startTriggeredUpload(getApplicationContext());
+        CloudStoreSynchronization.getInstance().startTriggeredUpload(getApplicationContext());
         new SendMessageTask(getPushMessage(readingData), OpenLibre.userProfile.getTokens(), null).execute();
     }
 
