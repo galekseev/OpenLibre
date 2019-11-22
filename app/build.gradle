@@ -12,7 +12,7 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 5
-        versionName "0.3.3"
+        versionName "0.3.4"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         project.ext.set("archivesBaseName", defaultConfig.applicationId + "-" + defaultConfig.versionName);
