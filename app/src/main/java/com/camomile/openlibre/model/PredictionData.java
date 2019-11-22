@@ -34,7 +34,13 @@ public class PredictionData {
         confidenceInterval = regression.getSlopeConfidenceInterval();
         int ageInSensorMinutes =
                 trendList.get(trendList.size() - 1).getAgeInSensorMinutes() + PREDICTION_TIME;
-        glucoseData = new GlucoseData(trendList.get(0).getSensor(), ageInSensorMinutes, trendList.get(0).getTimezoneOffsetInMinutes(), glucoseLevelRaw, true);
+        glucoseData = new GlucoseData(
+                trendList.get(0).getSensor(),
+                ageInSensorMinutes,
+                trendList.get(0).getTimezoneOffsetInMinutes(),
+                glucoseLevelRaw,
+                true
+        );
     }
 
     public List<GlucoseData> getPredictedData(int[] ageInSensorMinutesList) {

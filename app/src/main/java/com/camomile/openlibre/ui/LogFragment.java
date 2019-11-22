@@ -102,7 +102,6 @@ public class LogFragment extends Fragment implements SwipeRefreshLayout.OnRefres
             public void finished() {
                 mSwipeRefreshLayout.setRefreshing(false);
                 sync.unregisterProgressUpdateCallback();
-
             }
         });
         sync.startTriggeredDownload(getActivity().getApplicationContext());

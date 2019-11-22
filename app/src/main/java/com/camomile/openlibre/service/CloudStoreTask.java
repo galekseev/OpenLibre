@@ -24,17 +24,19 @@ public abstract class CloudStoreTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean success) {
-        if (success)
-            taskContainer.onTaskSuccess(this);
-        else{
-            if (errorCode == NO_ERRORS) errorCode = UNKNOWN_ERROR;
-            taskContainer.onTaskError(this);
-        }
+        if( taskContainer != null)
+            if (success)
+                taskContainer.onTaskSuccess(this);
+            else{
+                if (errorCode == NO_ERRORS) errorCode = UNKNOWN_ERROR;
+                taskContainer.onTaskError(this);
+            }
     }
 
     @Override
     protected void onCancelled() {
-        taskContainer.onTaskCancelled(this);
+        if (taskContainer != null)
+            taskContainer.onTaskCancelled(this);
     }
 
     @Override

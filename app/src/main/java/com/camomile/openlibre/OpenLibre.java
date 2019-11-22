@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.camomile.openlibre.model.ProcessedDataModule;
 import com.camomile.openlibre.model.RawDataModule;
 import com.camomile.openlibre.model.RawTagData;
@@ -18,18 +20,16 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.camomile.openlibre.model.db.UserProfile;
-import com.camomile.openlibre.service.CloudStoreSignInTask;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -52,6 +52,9 @@ public class OpenLibre extends Application {
     public static RealmConfiguration realmConfigProcessedData;
     public static RealmConfiguration realmConfigUserData;
     public static File openLibreDataPath;
+
+    // Http request queue
+    public static RequestQueue volleyRequestQueue;
 
     // auth
     public static String deviceAppToken;
@@ -79,6 +82,11 @@ public class OpenLibre extends Application {
         usersCollection = firestore.collection("users");
 
         setupAccount();
+
+        int apisAvailable = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getApplicationContext());
+        boolean av = apisAvailable == ConnectionResult.SUCCESS;
+        Log.d(LOG_ID, "Google Apis available: " + Boolean.toString(av));
+        volleyRequestQueue = Volley.newRequestQueue(this.getApplicationContext());
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(
                 new OnCompleteListener<InstanceIdResult>() {
@@ -108,6 +116,17 @@ public class OpenLibre extends Application {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()){
                         userProfile = task.getResult().toObject(UserProfile.class);
+                        if (userProfile.getType() == UserProfile.AccountType.LINKED){
+                            usersCollection.document(userProfile.getMaster()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()){
+                                        UserProfile master = task.getResult().toObject(UserProfile.class);
+                                        userProfile.setTokens(master.getTokens());
+                                    }
+                                }
+                            });
+                        }
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {

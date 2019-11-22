@@ -22,12 +22,16 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.camomile.openlibre.BuildConfig;
+import com.camomile.openlibre.OpenLibre;
 import com.camomile.openlibre.model.GlucoseData;
+import com.camomile.openlibre.model.PredictionData;
 import com.camomile.openlibre.model.RawTagData;
 import com.camomile.openlibre.model.ReadingData;
 import com.camomile.openlibre.model.SensorData;
 import com.camomile.openlibre.service.CloudStoreSynchronization;
 import com.camomile.openlibre.service.NfcVReaderTask;
+import com.camomile.openlibre.service.PushMessage;
+import com.camomile.openlibre.service.SendMessageTask;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
@@ -401,9 +405,24 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
     public void onNfcReadingFinished(ReadingData readingData) {
         mLastScanTime = new Date().getTime();
         onShowScanData(readingData);
-        CloudStoreSynchronization.getInstance().startTriggeredUpload(getApplicationContext());
+        //TODO Uncomment
+        //CloudStoreSynchronization.getInstance().startTriggeredUpload(getApplicationContext());
+        new SendMessageTask(getPushMessage(readingData), OpenLibre.userProfile.getTokens(), null).execute();
     }
 
+    private PushMessage getPushMessage(ReadingData readingData) {
+
+        PredictionData predictedGlucose = new PredictionData(readingData.getTrend());
+
+        PushMessage message = new PushMessage(
+                readingData.getDate(),
+                readingData.getTrend().last().glucose(),
+                predictedGlucose.glucoseData.glucose(),
+                predictedGlucose.glucoseSlopeRaw
+        );
+
+        return message;
+    }
 
     @Override
     public void onShowScanData(ReadingData readingData) {

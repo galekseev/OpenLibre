@@ -57,6 +57,9 @@ dependencies {
     //Messaging
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
     // ***** Firebase end *****
+
+    // Volley is an HTTP library that makes networking for Android apps easier and faster
+    implementation 'com.android.volley:volley:1.1.1'
 }
 
 // include user specific build tasks
