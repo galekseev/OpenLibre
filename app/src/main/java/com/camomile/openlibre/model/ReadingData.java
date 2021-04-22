@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
@@ -261,4 +262,35 @@ public class ReadingData extends RealmObject {
         return sensor;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReadingData)) return false;
+        ReadingData that = (ReadingData) o;
+        return getSensorAgeInMinutes() == that.getSensorAgeInMinutes() &&
+                getDate() == that.getDate() &&
+                getTimezoneOffsetInMinutes() == that.getTimezoneOffsetInMinutes() &&
+                getId().equals(that.getId()) &&
+                getSensor().equals(that.getSensor()) &&
+                getTrend().equals(that.getTrend()) &&
+                getHistory().equals(that.getHistory());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getSensor(), getSensorAgeInMinutes(), getDate(), getTimezoneOffsetInMinutes(), getTrend(), getHistory());
+    }
+
+    @Override
+    public String toString() {
+        return "ReadingData{" +
+                "id='" + id + '\'' +
+                ", sensor=" + sensor +
+                ", sensorAgeInMinutes=" + sensorAgeInMinutes +
+                ", date=" + date +
+                ", timezoneOffsetInMinutes=" + timezoneOffsetInMinutes +
+                ", trend=" + trend +
+                ", history=" + history +
+                '}';
+    }
 }
