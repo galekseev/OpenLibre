@@ -39,8 +39,8 @@ public class ReadingData extends RealmObject {
     private int sensorAgeInMinutes = -1;
     private long date = -1;
     private int timezoneOffsetInMinutes;
-    private RealmList<GlucoseData> trend = new RealmList<>();
-    private RealmList<GlucoseData> history = new RealmList<>();
+    private final RealmList<GlucoseData> trend = new RealmList<>();
+    private final RealmList<GlucoseData> history = new RealmList<>();
 
     public ReadingData() {}
     public ReadingData(RawTagData rawTagData) {
@@ -283,14 +283,22 @@ public class ReadingData extends RealmObject {
 
     @Override
     public String toString() {
+        StringBuilder trendString = new StringBuilder();
+        for (int i = 0; i < trend.size(); i++) {
+            trendString.append(trend.get(i).toString()).append(", ");
+        }
+        StringBuilder historyString = new StringBuilder();
+        for (int i = 0; i < history.size(); i++) {
+            historyString.append(history.get(i).toString()).append(", ");
+        }
         return "ReadingData{" +
                 "id='" + id + '\'' +
                 ", sensor=" + sensor +
                 ", sensorAgeInMinutes=" + sensorAgeInMinutes +
                 ", date=" + date +
                 ", timezoneOffsetInMinutes=" + timezoneOffsetInMinutes +
-                ", trend=" + trend +
-                ", history=" + history +
+                ", trend=" + trendString.toString() +
+                ", history=" + historyString.toString() +
                 '}';
     }
 }
