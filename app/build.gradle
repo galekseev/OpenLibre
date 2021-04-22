@@ -1,13 +1,10 @@
-apply plugin: "com.android.application"
+apply plugin: "com.android.library"
 apply plugin: "realm-android"
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
     defaultConfig {
-        applicationId "com.camomile.openlibre"
         minSdkVersion 19
         targetSdkVersion 28
         multiDexEnabled true
@@ -32,7 +29,6 @@ dependencies {
         exclude group: "com.android.support", module: "support-annotations"
     })
     implementation "io.realm:android-adapters:3.1.0"
-    implementation "com.github.PhilJay:MPAndroidChart:v3.0.2"
     implementation "com.android.support:appcompat-v7:28.0.0"
     implementation "com.android.support:design:28.0.0"
     implementation "com.android.support:support-v4:28.0.0"
@@ -41,22 +37,21 @@ dependencies {
     implementation "com.google.code.gson:gson:2.8.5"
     implementation 'junit:junit:4.13-beta-3'
     debugImplementation 'com.facebook.stetho:stetho:1.5.1'
-    debugImplementation "com.uphyca:stetho_realm:2.3.0"
 
     // ***** Firebase *****
     //Authentication
-    implementation 'com.google.firebase:firebase-auth:17.0.0'
-    implementation 'com.firebaseui:firebase-ui-auth:5.0.0'
-    //Cloud Firestore
-    implementation 'com.google.firebase:firebase-firestore:19.0.2'
-    //Crashalytics
-    implementation 'com.google.firebase:firebase-core:16.0.7'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    //Analytics
-    implementation 'com.google.firebase:firebase-analytics:16.3.0'
-    //Messaging
-    implementation 'com.google.firebase:firebase-messaging:18.0.0'
-    // ***** Firebase end *****
+//    implementation 'com.google.firebase:firebase-auth:17.0.0'
+//    implementation 'com.firebaseui:firebase-ui-auth:5.0.0'
+//    //Cloud Firestore
+//    implementation 'com.google.firebase:firebase-firestore:19.0.2'
+//    //Crashalytics
+//    implementation 'com.google.firebase:firebase-core:16.0.7'
+//    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+//    //Analytics
+//    implementation 'com.google.firebase:firebase-analytics:16.3.0'
+//    //Messaging
+//    implementation 'com.google.firebase:firebase-messaging:18.0.0'
+//    // ***** Firebase end *****
 
     // Volley is an HTTP library that makes networking for Android apps easier and faster
     implementation 'com.android.volley:volley:1.1.1'

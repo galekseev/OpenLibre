@@ -1,14 +1,14 @@
 package com.camomile.openlibre.ui;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.camomile.openlibre.R;
 
 /**
- * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+ * A {@link androidx.fragment.app.FragmentPagerAdapter} that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
 class SectionsPagerAdapter extends SmartFragmentStatePagerAdapter {
@@ -20,12 +20,12 @@ class SectionsPagerAdapter extends SmartFragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
-        if (position == mContext.getResources().getInteger(R.integer.viewpager_page_show_scan))
-            return DataPlotFragment.newInstance();
-        else if (position == mContext.getResources().getInteger(R.integer.viewpager_page_fragment_log))
-            return LogFragment.newInstance();
-        else if (position == mContext.getResources().getInteger(R.integer.viewpager_page_profile))
-            return UserFragment.newInstance();
+//        if (position == mContext.getResources().getInteger(R.integer.viewpager_page_show_scan))
+//            return DataPlotFragment.newInstance();
+//        else if (position == mContext.getResources().getInteger(R.integer.viewpager_page_fragment_log))
+//            return LogFragment.newInstance();
+//        else if (position == mContext.getResources().getInteger(R.integer.viewpager_page_profile))
+//            return UserFragment.newInstance();
         return null;
     }
 

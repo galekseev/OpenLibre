@@ -10,9 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.camomile.openlibre.model.RawTagData;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import io.realm.Realm;
 import io.realm.Sort;
@@ -46,7 +43,7 @@ class CloudStoreUploadDataTask extends CloudStoreDataTask {
             if (collectionId == null) return false;
 
             //TODO research a way to reduce number of queries to Firebase CloudStore
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+//            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             //cloudstoreSynchronization.updateProgress(0, new Date(cloudstoreUploadTimestamp));
 
@@ -72,11 +69,11 @@ class CloudStoreUploadDataTask extends CloudStoreDataTask {
                 dbDataItem.put("d", base64data);
                 dbDataItem.put("t", date);
 
-                Task addDocTask = db.collection(collectionId)
-                        .document()
-                        .set(dbDataItem);
-
-                Tasks.await(addDocTask);
+//                Task addDocTask = db.collection(collectionId)
+//                        .document()
+//                        .set(dbDataItem);
+//
+//                Tasks.await(addDocTask);
 
                 cloudstoreUploadTimestamp = date;
 

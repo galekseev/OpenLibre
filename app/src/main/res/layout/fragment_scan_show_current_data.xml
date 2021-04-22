@@ -17,7 +17,6 @@
 
     <include
         android:id="@+id/scan_plot"
-        layout="@layout/fragment_scan_plot"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
