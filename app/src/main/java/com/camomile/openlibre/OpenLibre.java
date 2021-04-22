@@ -203,7 +203,7 @@ public class OpenLibre extends Application {
                 .build();
     }
 
-    static void parseRawData() {
+    public static void parseRawData() {
         Realm realmRawData = Realm.getInstance(realmConfigRawData);
         Realm realmProcessedData = Realm.getInstance(realmConfigProcessedData);
 
