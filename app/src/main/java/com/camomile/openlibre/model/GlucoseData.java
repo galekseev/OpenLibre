@@ -160,6 +160,7 @@ public class GlucoseData extends RealmObject implements Comparable<GlucoseData> 
         return Objects.hash(getId(), getSensor(), isTrendData(), getAgeInSensorMinutes(), getGlucoseLevelRaw(), getDate(), getTimezoneOffsetInMinutes());
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "GlucoseData{" +

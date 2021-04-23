@@ -2,6 +2,8 @@ package com.camomile.openlibre.model;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -281,6 +283,7 @@ public class ReadingData extends RealmObject {
         return Objects.hash(getId(), getSensor(), getSensorAgeInMinutes(), getDate(), getTimezoneOffsetInMinutes(), getTrend(), getHistory());
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder trendString = new StringBuilder();
