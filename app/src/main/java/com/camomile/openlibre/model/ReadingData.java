@@ -39,8 +39,8 @@ public class ReadingData extends RealmObject {
     private int sensorAgeInMinutes = -1;
     private long date = -1;
     private int timezoneOffsetInMinutes;
-    private final RealmList<GlucoseData> trend = new RealmList<>();
-    private final RealmList<GlucoseData> history = new RealmList<>();
+    private RealmList<GlucoseData> trend = new RealmList<>();
+    private RealmList<GlucoseData> history = new RealmList<>();
 
     public ReadingData() {}
     public ReadingData(RawTagData rawTagData) {
