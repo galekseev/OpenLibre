@@ -7,7 +7,7 @@ import io.realm.RealmSchema;
 
 import static com.camomile.openlibre.RawDataRealmMigration.timezoneTransformFunction;
 
-class UserDataRealmMigration implements RealmMigration {
+public class UserDataRealmMigration implements RealmMigration {
 
     @Override
     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {

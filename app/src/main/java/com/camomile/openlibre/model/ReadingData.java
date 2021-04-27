@@ -2,8 +2,11 @@ package com.camomile.openlibre.model;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
@@ -261,4 +264,44 @@ public class ReadingData extends RealmObject {
         return sensor;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReadingData)) return false;
+        ReadingData that = (ReadingData) o;
+        return getSensorAgeInMinutes() == that.getSensorAgeInMinutes() &&
+                getDate() == that.getDate() &&
+                getTimezoneOffsetInMinutes() == that.getTimezoneOffsetInMinutes() &&
+                getId().equals(that.getId()) &&
+                getSensor().equals(that.getSensor()) &&
+                getTrend().equals(that.getTrend()) &&
+                getHistory().equals(that.getHistory());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getSensor(), getSensorAgeInMinutes(), getDate(), getTimezoneOffsetInMinutes(), getTrend(), getHistory());
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        StringBuilder trendString = new StringBuilder();
+        for (int i = 0; i < trend.size(); i++) {
+            trendString.append(trend.get(i).toString()).append(", ");
+        }
+        StringBuilder historyString = new StringBuilder();
+        for (int i = 0; i < history.size(); i++) {
+            historyString.append(history.get(i).toString()).append(", ");
+        }
+        return "ReadingData{" +
+                "id='" + id + '\'' +
+                ", sensor=" + sensor +
+                ", sensorAgeInMinutes=" + sensorAgeInMinutes +
+                ", date=" + date +
+                ", timezoneOffsetInMinutes=" + timezoneOffsetInMinutes +
+                ", trend=" + trendString.toString() +
+                ", history=" + historyString.toString() +
+                '}';
+    }
 }

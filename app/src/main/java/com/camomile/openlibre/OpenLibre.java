@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -20,18 +21,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.camomile.openlibre.model.db.UserProfile;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -59,9 +48,9 @@ public class OpenLibre extends Application {
     // auth
     public static String deviceAppToken;
 
-    // Firestore
-    public static FirebaseFirestore firestore = null;
-    public static CollectionReference usersCollection = null;
+//    // Firestore
+//    public static FirebaseFirestore firestore = null;
+//    public static CollectionReference usersCollection = null;
 
     //User profile
     public static UserProfile userProfile = null;
@@ -78,65 +67,65 @@ public class OpenLibre extends Application {
 
         parseRawData();
 
-        firestore = FirebaseFirestore.getInstance();
-        usersCollection = firestore.collection("users");
+//        firestore = FirebaseFirestore.getInstance();
+//        usersCollection = firestore.collection("users");
 
-        setupAccount();
+//        setupAccount();
 
-        int apisAvailable = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getApplicationContext());
-        boolean av = apisAvailable == ConnectionResult.SUCCESS;
-        Log.d(LOG_ID, "Google Apis available: " + Boolean.toString(av));
+//        int apisAvailable = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getApplicationContext());
+//        boolean av = apisAvailable == ConnectionResult.SUCCESS;
+//        Log.d(LOG_ID, "Google Apis available: " + Boolean.toString(av));
         volleyRequestQueue = Volley.newRequestQueue(this.getApplicationContext());
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(
-                new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(LOG_ID, "getInstanceId failed", task.getException());
-                            return;
-                        }
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(
+//                new OnCompleteListener<InstanceIdResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                        if (!task.isSuccessful()) {
+//                            Log.w(LOG_ID, "getInstanceId failed", task.getException());
+//                            return;
+//                        }
+//
+//                        // Get new Instance ID token
+//                        deviceAppToken = task.getResult().getToken();
+//                        Log.d(LOG_ID, "app token: " + deviceAppToken);
+//                    }
+//                }
+//        );
 
-                        // Get new Instance ID token
-                        deviceAppToken = task.getResult().getToken();
-                        Log.d(LOG_ID, "app token: " + deviceAppToken);
-                    }
-                }
-        );
-
-        StethoUtils.install(this, openLibreDataPath);
+//        StethoUtils.install(this, openLibreDataPath);
     }
 
-    private void setupAccount() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user != null) {
-            usersCollection.document(user.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()){
-                        userProfile = task.getResult().toObject(UserProfile.class);
-                        if (userProfile.getType() == UserProfile.AccountType.LINKED){
-                            usersCollection.document(userProfile.getMaster()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()){
-                                        UserProfile master = task.getResult().toObject(UserProfile.class);
-                                        userProfile.setTokens(master.getTokens());
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-    }
+//    private void setupAccount() {
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//
+//        if (user != null) {
+//            usersCollection.document(user.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()){
+//                        userProfile = task.getResult().toObject(UserProfile.class);
+//                        if (userProfile.getType() == UserProfile.AccountType.LINKED){
+//                            usersCollection.document(userProfile.getMaster()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()){
+//                                        UserProfile master = task.getResult().toObject(UserProfile.class);
+//                                        userProfile.setTokens(master.getTokens());
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//        }
+//    }
 
     public static void refreshApplicationSettings(SharedPreferences settings) {
         // read settings values
@@ -214,7 +203,7 @@ public class OpenLibre extends Application {
                 .build();
     }
 
-    static void parseRawData() {
+    public static void parseRawData() {
         Realm realmRawData = Realm.getInstance(realmConfigRawData);
         Realm realmProcessedData = Realm.getInstance(realmConfigProcessedData);
 

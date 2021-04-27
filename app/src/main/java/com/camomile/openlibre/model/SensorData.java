@@ -1,6 +1,7 @@
 package com.camomile.openlibre.model;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.RealmObject;
@@ -46,5 +47,27 @@ public class SensorData extends RealmObject {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SensorData)) return false;
+        SensorData that = (SensorData) o;
+        return getStartDate() == that.getStartDate() &&
+                getId().equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getStartDate());
+    }
+
+    @Override
+    public String toString() {
+        return "SensorData{" +
+                "id='" + id + '\'' +
+                ", startDate=" + startDate +
+                '}';
     }
 }

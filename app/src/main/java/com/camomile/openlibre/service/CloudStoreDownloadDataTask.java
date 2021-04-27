@@ -7,13 +7,6 @@ import android.util.Log;
 
 //import com.camomile.openlibre.BuildConfig;
 import com.camomile.openlibre.model.RawTagData;
-import com.google.android.gms.tasks.Task;
-
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,42 +42,42 @@ class CloudStoreDownloadDataTask extends CloudStoreDataTask {
 
         //TODO research a way to reduce number of queries to Firebase CloudStore
         try {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-            Log.d(LOG_ID,"Start quering data");
-            Task<QuerySnapshot> task = db.collection(collectionId)
-                    .whereGreaterThan("t", cloudstoreDownloadTimestamp)
-                    .orderBy("t", Query.Direction.ASCENDING)
-                    .limit(1000)
-                    .get();
-
-            Tasks.await(task);
+//            FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//            Log.d(LOG_ID,"Start quering data");
+//            Task<QuerySnapshot> task = db.collection(collectionId)
+//                    .whereGreaterThan("t", cloudstoreDownloadTimestamp)
+//                    .orderBy("t", Query.Direction.ASCENDING)
+//                    .limit(1000)
+//                    .get();
+//
+//            Tasks.await(task);
 
             Log.v(LOG_ID, "Query completed");
-            if (task.isComplete() && task.isSuccessful()){
-
-                QuerySnapshot querySnapshot = task.getResult();
-                if (querySnapshot.isEmpty()){
-                    Log.d(LOG_ID, "Empty result set returned");
-                    return true;
-                }
-
-                List<RawTagData> rawTagDataList = new ArrayList<RawTagData>();
-                for (QueryDocumentSnapshot document: querySnapshot){
-                    String sensor = document.getString("s");
-                    long utc_date = document.getLong("t");
-                    String dataString = document.getString("d");
-                    byte[] data = Base64.decode(dataString, Base64.DEFAULT);
-                    Log.v(LOG_ID, String.format("Reading data: t=%s ; s=%s", utc_date, sensor));
-                    rawTagDataList.add(new RawTagData(sensor, utc_date, data));
-                    cloudstoreDownloadTimestamp = utc_date;
-                }
-
-                Log.d(LOG_ID, String.format("Read %s tags", rawTagDataList.size()));
-                NfcVReaderTask.processRawDataList(rawTagDataList);
-
-                //cloudstoreSynchronization.updateProgress(1, new Date(cloudstoreDownloadTimestamp));
-            }
+//            if (task.isComplete() && task.isSuccessful()){
+//
+//                QuerySnapshot querySnapshot = task.getResult();
+//                if (querySnapshot.isEmpty()){
+//                    Log.d(LOG_ID, "Empty result set returned");
+//                    return true;
+//                }
+//
+//                List<RawTagData> rawTagDataList = new ArrayList<RawTagData>();
+//                for (QueryDocumentSnapshot document: querySnapshot){
+//                    String sensor = document.getString("s");
+//                    long utc_date = document.getLong("t");
+//                    String dataString = document.getString("d");
+//                    byte[] data = Base64.decode(dataString, Base64.DEFAULT);
+//                    Log.v(LOG_ID, String.format("Reading data: t=%s ; s=%s", utc_date, sensor));
+//                    rawTagDataList.add(new RawTagData(sensor, utc_date, data));
+//                    cloudstoreDownloadTimestamp = utc_date;
+//                }
+//
+//                Log.d(LOG_ID, String.format("Read %s tags", rawTagDataList.size()));
+//                NfcVReaderTask.processRawDataList(rawTagDataList);
+//
+//                //cloudstoreSynchronization.updateProgress(1, new Date(cloudstoreDownloadTimestamp));
+//            }
         }
         catch (Exception e) {
             Log.e(LOG_ID, "Error: " + e.toString());

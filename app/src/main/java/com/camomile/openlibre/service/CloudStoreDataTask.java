@@ -8,8 +8,6 @@ import android.widget.Toast;
 import com.camomile.openlibre.OpenLibre;
 import com.camomile.openlibre.R;
 import com.camomile.openlibre.model.db.UserProfile;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 abstract class CloudStoreDataTask extends CloudStoreTask {
@@ -41,17 +39,17 @@ abstract class CloudStoreDataTask extends CloudStoreTask {
 
     protected static String getCollectionId()
     {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = auth.getCurrentUser();
+//        FirebaseAuth auth = FirebaseAuth.getInstance();
+//        FirebaseUser currentUser = auth.getCurrentUser();
 
-        if (currentUser == null)
-        {
-            Log.d(LOG_ID, "User is not authenticated");
-            return null;
-        }
+//        if (currentUser == null)
+//        {
+//            Log.d(LOG_ID, "User is not authenticated");
+//            return null;
+//        }
 
         if (OpenLibre.userProfile == null || OpenLibre.userProfile.getType() != UserProfile.AccountType.LINKED)
-            return currentUser.getUid();
+            return "currentUser.getUid()";
         else
             return OpenLibre.userProfile.getMasterUid();
     }

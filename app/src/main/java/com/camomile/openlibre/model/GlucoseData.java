@@ -1,8 +1,10 @@
 package com.camomile.openlibre.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+
 import java.text.DecimalFormat;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.RealmObject;
@@ -137,5 +139,38 @@ public class GlucoseData extends RealmObject implements Comparable<GlucoseData> 
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GlucoseData)) return false;
+        GlucoseData that = (GlucoseData) o;
+        return isTrendData() == that.isTrendData() &&
+                getAgeInSensorMinutes() == that.getAgeInSensorMinutes() &&
+                getGlucoseLevelRaw() == that.getGlucoseLevelRaw() &&
+                getDate() == that.getDate() &&
+                getTimezoneOffsetInMinutes() == that.getTimezoneOffsetInMinutes() &&
+                getId().equals(that.getId()) &&
+                getSensor().equals(that.getSensor());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getSensor(), isTrendData(), getAgeInSensorMinutes(), getGlucoseLevelRaw(), getDate(), getTimezoneOffsetInMinutes());
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "GlucoseData{" +
+                "id='" + id + '\'' +
+                ", sensor=" + sensor +
+                ", isTrendData=" + isTrendData +
+                ", ageInSensorMinutes=" + ageInSensorMinutes +
+                ", glucoseLevelRaw=" + glucoseLevelRaw +
+                ", date=" + date +
+                ", timezoneOffsetInMinutes=" + timezoneOffsetInMinutes +
+                '}';
     }
 }

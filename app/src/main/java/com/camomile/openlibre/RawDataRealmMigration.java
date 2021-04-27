@@ -9,7 +9,7 @@ import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 
-class RawDataRealmMigration implements RealmMigration {
+public class RawDataRealmMigration implements RealmMigration {
     static final RealmObjectSchema.Function timezoneTransformFunction = new RealmObjectSchema.Function() {
         @Override
         public void apply(DynamicRealmObject obj) {

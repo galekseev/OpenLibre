@@ -35,8 +35,8 @@ import static com.camomile.openlibre.model.AlgorithmUtil.bytesToHexString;
 
 public class NfcVReaderTask extends AsyncTask<Tag, Void, Boolean> {
     private static final String LOG_ID = "OpenLibre::" + NfcVReaderTask.class.getSimpleName();
-    private static final long[] vibrationPatternSuccess = {0, 200, 100, 200}; // [ms]
-    private static final long[] vibrationPatternFailure = {0, 500}; // [ms]
+    public static final long[] vibrationPatternSuccess = {0, 200, 100, 200}; // [ms]
+    public static final long[] vibrationPatternFailure = {0, 500}; // [ms]
     private static final long nfcReadTimeout = 1000; // [ms]
 
     private MainActivity mainActivity;

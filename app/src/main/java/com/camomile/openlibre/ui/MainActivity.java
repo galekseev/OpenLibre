@@ -10,18 +10,15 @@ import android.nfc.NfcManager;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.camomile.openlibre.BuildConfig;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
 import com.camomile.openlibre.OpenLibre;
 import com.camomile.openlibre.model.GlucoseData;
 import com.camomile.openlibre.model.PredictionData;
@@ -32,8 +29,7 @@ import com.camomile.openlibre.service.CloudStoreSynchronization;
 import com.camomile.openlibre.service.NfcVReaderTask;
 import com.camomile.openlibre.service.PushMessage;
 import com.camomile.openlibre.service.SendMessageTask;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
 
@@ -58,7 +54,7 @@ import static com.camomile.openlibre.OpenLibre.realmConfigProcessedData;
 import static com.camomile.openlibre.OpenLibre.realmConfigRawData;
 
 
-public class MainActivity extends AppCompatActivity implements LogFragment.OnScanDataListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_ID = "OpenLibre::" + MainActivity.class.getSimpleName();
     private static final String DEBUG_SENSOR_TAG_ID = "e007a00000111111";
@@ -77,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
     private Tag mLastNfcTag;
     private MainActivity mainActivity;
 
-    private FirebaseAuth mAuth;
+//    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
         }
 
         //Firebase auth
-        mAuth = FirebaseAuth.getInstance();
+//        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -121,9 +117,9 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
         super.onStart();
 
         String uid = "non-authorized";
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null)
-            uid = currentUser.getUid();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if (currentUser != null)
+//            uid = currentUser.getUid();
         Log.d(LOG_ID, "User:" + uid);
     }
 
@@ -192,9 +188,9 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
 
         // show debug menu only in developer mode
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean developerMode = settings.getBoolean("pref_developer_mode", false) || BuildConfig.DEBUG;
+//        boolean developerMode = settings.getBoolean("pref_developer_mode", false) || BuildConfig.DEBUG;
         MenuItem debugMenuItem = menu.findItem(R.id.action_debug_menu);
-        debugMenuItem.setVisible(developerMode);
+        debugMenuItem.setVisible(false);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -205,8 +201,8 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, SettingsActivity.class);
+//            startActivity(intent);
             return true;
 
         } else if (id == R.id.action_show_last_scan) {
@@ -215,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
             if (readingDataResults.size() == 0) {
                 Toast.makeText(this, "No scan data available!", Toast.LENGTH_LONG).show();
             } else {
-                ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
-                        .showScan(readingDataResults.first());
+//                ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
+//                        .showScan(readingDataResults.first());
                 mViewPager.setCurrentItem(getResources().getInteger(R.integer.viewpager_page_show_scan));
             }
             return true;
@@ -226,29 +222,29 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
                     .equalTo(GlucoseData.IS_TREND_DATA, false)
                     .sort(GlucoseData.DATE, Sort.ASCENDING)
                     .findAll();
-            ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
-                    .clearScanData();
-            ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
-                    .showHistory(history);
+//            ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
+//                    .clearScanData();
+//            ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
+//                    .showHistory(history);
             mViewPager.setCurrentItem(getResources().getInteger(R.integer.viewpager_page_show_scan));
             return true;
 
         } else if (id == R.id.action_enter_blood_glucose) {
-            DialogFragment bloodGlucoseInputFragment = new BloodGlucoseInputFragment();
-            bloodGlucoseInputFragment.show(getSupportFragmentManager(), "enterglucose");
+//            DialogFragment bloodGlucoseInputFragment = new BloodGlucoseInputFragment();
+//            bloodGlucoseInputFragment.show(getSupportFragmentManager(), "enterglucose");
             return true;
 
         } else if (id == R.id.action_show_fpu_calculator) {
-            DialogFragment fpuCalculatorFragment = new FPUCalculatorFragment();
-            fpuCalculatorFragment.show(getSupportFragmentManager(), "fpucalculator");
+//            DialogFragment fpuCalculatorFragment = new FPUCalculatorFragment();
+//            fpuCalculatorFragment.show(getSupportFragmentManager(), "fpucalculator");
             return true;
 
         } else if (id == R.id.action_show_sensor_status) {
-            new SensorStatusFragment().show(getSupportFragmentManager(), "sensorstatus");
+//            new SensorStatusFragment().show(getSupportFragmentManager(), "sensorstatus");
             return true;
 
         } else if (id == R.id.action_about) {
-            new AboutFragment().show(getSupportFragmentManager(), "about");
+//            new AboutFragment().show(getSupportFragmentManager(), "about");
             return true;
 
         } else if (id == R.id.action_debug_make_crash) {
@@ -259,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
             return true;
 
         } else if (id == R.id.action_debug_clear_plot) {
-            ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan)).mPlot.clear();
+//            ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan)).mPlot.clear();
             return true;
 
         } else if (id == R.id.action_debug_plot_readings) {
@@ -273,8 +269,8 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
             for (int i = readingDataList.size(); i > Math.max(readingDataList.size() - 100, 0) ; i--) {
                 readingDataLimtedList.add(readingDataList.get(i-1));
             }
-            ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
-                    .showMultipleScans(readingDataLimtedList);
+//            ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
+//                    .showMultipleScans(readingDataLimtedList);
             mViewPager.setCurrentItem(getResources().getInteger(R.integer.viewpager_page_show_scan));
             return true;
 
@@ -286,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
         } else if (id == R.id.action_debug_not_ready) {
             // sensor not ready yet
             byte[] data = {(byte) 0x63, (byte) 0x3b, (byte) 0x20, (byte) 0x12, (byte) 0x03, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x49, (byte) 0x2e, (byte) 0x0b, (byte) 0x00, (byte) 0x11, (byte) 0x9e, (byte) 0x80, (byte) 0x52, (byte) 0x61, (byte) 0x00, (byte) 0xa4, (byte) 0x88, (byte) 0x80, (byte) 0x66, (byte) 0x60, (byte) 0x80, (byte) 0xbb, (byte) 0x84, (byte) 0x80, (byte) 0xba, (byte) 0x9f, (byte) 0x80, (byte) 0xa3, (byte) 0x03, (byte) 0xc8, (byte) 0x9c, (byte) 0x9f, (byte) 0x80, (byte) 0x8b, (byte) 0x03, (byte) 0xc8, (byte) 0x44, (byte) 0x9f, (byte) 0x80, (byte) 0xb7, (byte) 0x03, (byte) 0x88, (byte) 0x02, (byte) 0x9f, (byte) 0x80, (byte) 0xee, (byte) 0x03, (byte) 0xc8, (byte) 0x0c, (byte) 0x9e, (byte) 0x80, (byte) 0x0e, (byte) 0x04, (byte) 0xc8, (byte) 0x9c, (byte) 0x9d, (byte) 0x80, (byte) 0x1e, (byte) 0x04, (byte) 0xc8, (byte) 0xf8, (byte) 0x9d, (byte) 0x80, (byte) 0x2e, (byte) 0x04, (byte) 0xc8, (byte) 0x2c, (byte) 0x9e, (byte) 0x80, (byte) 0x3b, (byte) 0x04, (byte) 0xc8, (byte) 0x3c, (byte) 0xde, (byte) 0x80, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0c, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x12, (byte) 0xdb, (byte) 0x00, (byte) 0x01, (byte) 0x3b, (byte) 0x05, (byte) 0xd1, (byte) 0x51, (byte) 0x14, (byte) 0x07, (byte) 0x96, (byte) 0x80, (byte) 0x5a, (byte) 0x00, (byte) 0xed, (byte) 0xa6, (byte) 0x02, (byte) 0x70, (byte) 0x1a, (byte) 0xc8, (byte) 0x04, (byte) 0x54, (byte) 0xd9, (byte) 0x66, (byte) 0x9e, (byte) 0x42, (byte) 0x21, (byte) 0x83, (byte) 0xf2, (byte) 0x90, (byte) 0x07, (byte) 0x00, (byte) 0x06, (byte) 0x08, (byte) 0x02, (byte) 0x24, (byte) 0x0c, (byte) 0x43, (byte) 0x17, (byte) 0x3c};
-            onShowScanData(NfcVReaderTask.processRawData(DEBUG_SENSOR_TAG_ID, data));
+//            onShowScanData(NfcVReaderTask.processRawData(DEBUG_SENSOR_TAG_ID, data));
             return true;
 
         } else if (id == R.id.action_debug_export_data) {
@@ -367,8 +363,8 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
             mRealmProcessedData.close();
 
             // destroy log fragment to close its Realm instance
-            Fragment logFragment = mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_fragment_log);
-            getSupportFragmentManager().beginTransaction().remove(logFragment).commitNow();
+//            Fragment logFragment = mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_fragment_log);
+//            getSupportFragmentManager().beginTransaction().remove(logFragment).commitNow();
 
             // delete Realm file
             Realm.deleteRealm(realmConfigProcessedData);
@@ -404,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
 
     public void onNfcReadingFinished(ReadingData readingData) {
         mLastScanTime = new Date().getTime();
-        onShowScanData(readingData);
+//        onShowScanData(readingData);
         //TODO Uncomment
         CloudStoreSynchronization.getInstance().startTriggeredUpload(getApplicationContext());
         new SendMessageTask(getPushMessage(readingData), OpenLibre.userProfile.getTokens(), null).execute();
@@ -424,12 +420,12 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
         return message;
     }
 
-    @Override
-    public void onShowScanData(ReadingData readingData) {
-        ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
-                .showScan(readingData);
-        mViewPager.setCurrentItem(getResources().getInteger(R.integer.viewpager_page_show_scan));
-    }
+//    @Override
+//    public void onShowScanData(ReadingData readingData) {
+////        ((DataPlotFragment) mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan))
+////                .showScan(readingData);
+//        mViewPager.setCurrentItem(getResources().getInteger(R.integer.viewpager_page_show_scan));
+//    }
 
 
     private void startContinuousSensorReadingTimer() {
@@ -465,11 +461,11 @@ public class MainActivity extends AppCompatActivity implements LogFragment.OnSca
                 startContinuousSensorReadingTimer();
 
             } else if (now - mLastScanTime > 5000) {
-                DataPlotFragment dataPlotFragment = (DataPlotFragment)
-                        mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan);
-                if (dataPlotFragment != null) {
-                    dataPlotFragment.clearScanData();
-                }
+//                DataPlotFragment dataPlotFragment = (DataPlotFragment)
+//                        mSectionsPagerAdapter.getRegisteredFragment(R.integer.viewpager_page_show_scan);
+//                if (dataPlotFragment != null) {
+//                    dataPlotFragment.clearScanData();
+//                }
 
                 new NfcVReaderTask(this).execute(mLastNfcTag);
             }
